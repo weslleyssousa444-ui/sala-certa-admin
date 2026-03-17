@@ -30,14 +30,14 @@ function isAdmin() {
     return isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] === 'admin';
 }
 
-// Verificar se usuário tem setor (acesso administrativo)
-function hasSetor() {
-    return isset($_SESSION['setor']) && !empty($_SESSION['setor']);
+// Verificar se usuário tem departamento (acesso administrativo)
+function hasUsuarioDepartamento() {
+    return isset($_SESSION['usuario_departamento']) && !empty($_SESSION['usuario_departamento']);
 }
 
-// Verificar se usuário pode acessar o painel (admin OU tem setor)
+// Verificar se usuário pode acessar o painel (admin OU tem departamento)
 function canAccessPanel() {
-    return isAdmin() || hasSetor();
+    return isAdmin() || hasUsuarioDepartamento();
 }
 
 // Redirecionar se não estiver logado
