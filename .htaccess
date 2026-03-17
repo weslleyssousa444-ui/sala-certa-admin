@@ -19,12 +19,9 @@ ServerSignature Off
 # RewriteCond %{HTTPS} off
 # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# Landing page como página padrão do diretório
-DirectoryIndex landing.php index.php
-
 # Página de erro personalizada
-ErrorDocument 404 /landing.php
-ErrorDocument 403 /landing.php
+ErrorDocument 404 /index.php
+ErrorDocument 403 /index.php
 
 # Charset UTF-8
 AddDefaultCharset UTF-8

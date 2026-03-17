@@ -6,6 +6,11 @@ require_once 'classes/Reserva.php';
 require_once 'classes/Sala.php';
 require_once 'classes/Usuario.php';
 
+// Se não está logado, redireciona para a landing page
+if (!isLoggedIn()) {
+    header('Location: landing.php');
+    exit;
+}
 requireLogin();
 
 function contarReservasPorDia($dias = 7) {
