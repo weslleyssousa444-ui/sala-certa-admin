@@ -59,7 +59,7 @@ try {
 
     // ---- Consulta na MESMA TABELA: USUARIO ----
     // ATENÇÃO: se a senha estiver hasheada no banco, troque a lógica conforme comentário abaixo.
-    $sql = "SELECT USUARIO_ID, USUARIO_NOME, USUARIO_EMAIL, USUARIO_CPF, USUARIO_CURSO
+    $sql = "SELECT USUARIO_ID, USUARIO_NOME, USUARIO_EMAIL, USUARIO_CPF, USUARIO_CARGO, USUARIO_DEPARTAMENTO
             FROM USUARIO
             WHERE USUARIO_EMAIL = :email AND USUARIO_SENHA = :senha
             LIMIT 1";
