@@ -71,7 +71,10 @@ $pageTitle = 'Login';
         </div>
         <div class="visual-overlay"></div>
         <div class="visual-content">
-            <span class="visual-logo">Sala Certa</span>
+            <span class="visual-logo" style="display:flex;align-items:center;gap:12px;">
+                <img src="assets/img/logo.png" alt="Sala Certa" style="width:48px;height:48px;border-radius:10px;">
+                Sala Certa
+            </span>
 
             <div class="visual-headline">
                 <h1>Gerencie suas reservas <span>com elegância</span></h1>
@@ -103,7 +106,10 @@ $pageTitle = 'Login';
     <div class="login-form-side">
 
         <!-- Mobile logo (hidden on desktop) -->
-        <span class="mobile-logo">Sala Certa</span>
+        <span class="mobile-logo" style="display:flex;align-items:center;gap:10px;justify-content:center;">
+            <img src="assets/img/logo.png" alt="Sala Certa" style="width:36px;height:36px;border-radius:8px;">
+            Sala Certa
+        </span>
 
         <div class="login-form-container">
             <div class="login-form-header">

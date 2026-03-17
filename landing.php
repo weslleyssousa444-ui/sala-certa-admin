@@ -30,6 +30,7 @@ try {
         <div class="hero-bg"></div>
         <div class="hero-overlay"></div>
         <div class="hero-content">
+            <img src="assets/img/logo.png" alt="Sala Certa" style="width:80px;height:80px;border-radius:16px;margin-bottom:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
             <h1>Reserve o Espaço Perfeito</h1>
             <p>Gerencie reservas de salas de forma simples, rápida e inteligente.<br>A solução corporativa que a sua organização precisa.</p>
             <a href="login.php" class="btn btn-cta">Começar Agora <i class="fas fa-arrow-right ms-2"></i></a>
@@ -147,7 +148,10 @@ try {
     <!-- Section 5: Footer -->
     <footer class="landing-footer">
         <div class="container">
-            <div class="footer-logo">Sala Certa</div>
+            <div class="footer-logo" style="display:flex;align-items:center;gap:12px;justify-content:center;">
+                <img src="assets/img/logo.png" alt="Sala Certa" style="width:32px;height:32px;border-radius:6px;">
+                <span>Sala Certa</span>
+            </div>
             <nav class="footer-links">
                 <a href="login.php">Login</a>
                 <a href="#">Sobre</a>

@@ -72,8 +72,13 @@ $avatarSrc = $userPhoto ?? $defaultAvatar;
 
 <aside class="sc-sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <span class="logo-text">Sala Certa</span>
-    <span class="logo-subtitle">Reserva de Salas</span>
+    <a href="<?php echo $baseUrl; ?>/index.php" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
+      <img src="<?php echo $baseUrl; ?>/assets/img/logo.png" alt="Sala Certa" style="width:40px;height:40px;border-radius:8px;">
+      <div>
+        <span class="logo-text">Sala Certa</span>
+        <span class="logo-subtitle">Reserva de Salas</span>
+      </div>
+    </a>
   </div>
 
   <nav class="sidebar-nav">
