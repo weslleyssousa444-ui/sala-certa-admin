@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once '../config/config.php';
 require_once '../classes/Reserva.php';
 require_once '../includes/alert.php';
@@ -32,93 +32,126 @@ $pageTitle = 'Reservas por Data';
 include '../includes/header.php';
 ?>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Reservas por Data</h2>
-            <a href="nova_reserva.php" class="btn btn-primary">
-                <i class="fas fa-plus me-2"></i>Nova Reserva
-            </a>
-        </div>
-        
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Filtrar por Data</h5>
-            </div>
-            <div class="card-body">
-                <form method="post" class="row g-3">
-                    <div class="col-md-4">
-                        <label for="data_busca" class="form-label">Data</label>
-                        <input type="text" class="form-control datepicker date-mask" id="data_busca" name="data_busca" value="<?php echo date('d/m/Y', strtotime($dataBusca)); ?>">
-                    </div>
-                    <div class="col-md-8 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary me-2">
-                            <i class="fas fa-search me-2"></i>Buscar
-                        </button>
-                        <a href="reservas_por_data.php" class="btn btn-secondary">
-                            <i class="fas fa-redo me-2"></i>Hoje
-                        </a>
-                    </div>
-                </form>
-            </div>
-        </div>
-        
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">
-                    Reservas do dia <?php echo date('d/m/Y', strtotime($dataBusca)); ?>
-                    <span class="badge bg-primary ms-2"><?php echo count($reservas); ?></span>
-                </h5>
-            </div>
-            <div class="card-body">
-                <?php if (count($reservas) > 0): ?>
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Hora</th>
-                                <th>Sala</th>
-                                <th>Usuário</th>
-                                <th>Duração</th>
-                                <th>Estado</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($reservas as $reserva): ?>
-                            <tr>
-                                <td><strong><?php echo date('H:i', strtotime($reserva['HORA_INICIO'])); ?></strong></td>
-                                <td>Sala <?php echo $reserva['NUM_SALA']; ?></td>
-                                <td><?php echo $reserva['USUARIO_NOME']; ?></td>
-                                <td><?php echo date('H:i', strtotime($reserva['TEMPO_RESERVA'])); ?></td>
-                                <td>
-                                    <span class="badge bg-<?php echo $reserva['ESTADO'] == 'Ativa' ? 'success' : 'danger'; ?>">
-                                        <?php echo $reserva['ESTADO']; ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <a href="ver_reserva.php?id=<?php echo $reserva['RESERVA_ID']; ?>" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Ver detalhes">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="editar_reserva.php?id=<?php echo $reserva['RESERVA_ID']; ?>" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-                <?php else: ?>
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Não há reservas para esta data.
-                </div>
-                <?php endif; ?>
-            </div>
-        </div>
+<!-- Page Header -->
+<div class="page-header">
+    <h2>Reservas por Data</h2>
+    <div class="page-actions">
+        <a href="nova_reserva.php" class="btn-gold"><i class="fas fa-plus me-2"></i>Nova Reserva</a>
     </div>
 </div>
+
+<!-- Date Filter -->
+<div class="sc-filters">
+    <form method="post" class="sc-search">
+        <div class="sc-search-group">
+            <label for="data_busca" class="sc-search-label">Filtrar por Data</label>
+            <input type="text" class="sc-search-input datepicker date-mask" id="data_busca" name="data_busca"
+                   value="<?= date('d/m/Y', strtotime($dataBusca)) ?>" placeholder="dd/mm/aaaa">
+        </div>
+        <div class="sc-search-actions">
+            <button type="submit" class="btn-gold">
+                <i class="fas fa-search me-2"></i>Buscar
+            </button>
+            <a href="reservas_por_data.php" class="btn-outline-gold">
+                <i class="fas fa-redo me-2"></i>Hoje
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Result count header -->
+<div class="page-header" style="margin-top:1.5rem;">
+    <h3 style="font-size:1rem;font-weight:600;">
+        Reservas do dia <?= date('d/m/Y', strtotime($dataBusca)) ?>
+        <span class="badge-status badge-ativa" style="margin-left:.5rem;"><?= count($reservas) ?></span>
+    </h3>
+</div>
+
+<!-- Desktop Table -->
+<div class="sc-table-responsive">
+    <div class="sc-table-wrapper">
+        <table class="sc-table" id="dataTable">
+            <thead>
+                <tr>
+                    <th>Hora</th>
+                    <th>Sala</th>
+                    <th>Usuário</th>
+                    <th>Duração</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($reservas as $r): ?>
+                <tr>
+                    <td><strong><?= date('H:i', strtotime($r['HORA_INICIO'])) ?></strong></td>
+                    <td>Sala <?= htmlspecialchars($r['NUM_SALA']) ?></td>
+                    <td><?= htmlspecialchars($r['USUARIO_NOME']) ?></td>
+                    <td><?= date('H:i', strtotime($r['TEMPO_RESERVA'])) ?></td>
+                    <td>
+                        <span class="badge-status badge-<?= strtolower($r['ESTADO']) ?>"><?= htmlspecialchars($r['ESTADO']) ?></span>
+                        <?php if (!empty($r['RESERVA_PAI_ID'])): ?>
+                            <span class="badge-recorrente"><i class="fas fa-sync-alt"></i> Recorrente</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <div class="actions-cell">
+                            <a href="ver_reserva.php?id=<?= $r['RESERVA_ID'] ?>" class="btn-action btn-action-view" title="Ver"><i class="fas fa-eye"></i></a>
+                            <a href="editar_reserva.php?id=<?= $r['RESERVA_ID'] ?>" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-pencil-alt"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Mobile Cards -->
+<div class="sc-mobile-cards">
+    <?php foreach ($reservas as $r): ?>
+    <div class="mobile-card">
+        <div class="mobile-card-row">
+            <span class="mobile-card-label">Hora</span>
+            <span class="mobile-card-value"><strong><?= date('H:i', strtotime($r['HORA_INICIO'])) ?></strong></span>
+        </div>
+        <div class="mobile-card-row">
+            <span class="mobile-card-label">Sala</span>
+            <span class="mobile-card-value">Sala <?= htmlspecialchars($r['NUM_SALA']) ?></span>
+        </div>
+        <div class="mobile-card-row">
+            <span class="mobile-card-label">Usuário</span>
+            <span class="mobile-card-value"><?= htmlspecialchars($r['USUARIO_NOME']) ?></span>
+        </div>
+        <div class="mobile-card-row">
+            <span class="mobile-card-label">Duração</span>
+            <span class="mobile-card-value"><?= date('H:i', strtotime($r['TEMPO_RESERVA'])) ?></span>
+        </div>
+        <div class="mobile-card-row">
+            <span class="mobile-card-label">Status</span>
+            <span class="mobile-card-value">
+                <span class="badge-status badge-<?= strtolower($r['ESTADO']) ?>"><?= htmlspecialchars($r['ESTADO']) ?></span>
+                <?php if (!empty($r['RESERVA_PAI_ID'])): ?>
+                    <span class="badge-recorrente"><i class="fas fa-sync-alt"></i> Recorrente</span>
+                <?php endif; ?>
+            </span>
+        </div>
+        <div class="mobile-card-actions">
+            <a href="ver_reserva.php?id=<?= $r['RESERVA_ID'] ?>" class="btn-action btn-action-view" title="Ver"><i class="fas fa-eye"></i></a>
+            <a href="editar_reserva.php?id=<?= $r['RESERVA_ID'] ?>" class="btn-action btn-action-edit" title="Editar"><i class="fas fa-pencil-alt"></i></a>
+        </div>
+    </div>
+    <?php endforeach; ?>
+</div>
+
+<!-- Empty State -->
+<?php if (empty($reservas)): ?>
+<div class="empty-state">
+    <div class="empty-state-icon"><i class="fas fa-calendar-day"></i></div>
+    <div class="empty-state-title">Nenhum registro encontrado</div>
+    <a href="nova_reserva.php" class="btn-gold">Criar nova reserva</a>
+</div>
+<?php endif; ?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -126,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof $.fn.mask !== 'undefined') {
         $('.date-mask').mask('00/00/0000');
     }
-    
+
     // Inicializar datepicker
     if (typeof $.fn.datepicker !== 'undefined') {
         $('.datepicker').datepicker({
@@ -140,4 +173,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php include '../includes/footer.php'; ?>
-
