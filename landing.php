@@ -1,12 +1,13 @@
 <?php
 // Get dynamic counts from database
+require_once __DIR__ . '/config/config.php';
 require_once __DIR__ . '/config/conexao.php';
 try {
-    $pdo = Conexao::getConexao();
+    $pdo = Conexao::getConn();
     $totalReservas = $pdo->query("SELECT COUNT(*) FROM RESERVA_SALA")->fetchColumn();
     $totalSalas = $pdo->query("SELECT COUNT(*) FROM SALA")->fetchColumn();
     $totalUsuarios = $pdo->query("SELECT COUNT(*) FROM USUARIO")->fetchColumn();
-} catch (Exception $e) {
+} catch (Throwable $e) {
     $totalReservas = 500;
     $totalSalas = 50;
     $totalUsuarios = 200;
