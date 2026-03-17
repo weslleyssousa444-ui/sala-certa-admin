@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 if (!defined('APP_NAME')) {
     require_once __DIR__ . '/../config/config.php';
 }
@@ -10,316 +10,200 @@ $baseUrl = $isSubfolder ? '..' : '.';
 if (!isset($pageTitle)) {
     $pageTitle = APP_NAME;
 }
+
+// Helper: tempo relativo
+if (!function_exists('timeAgo')) {
+    function timeAgo($datetime) {
+        $now = new DateTime();
+        $ago = new DateTime($datetime);
+        $diff = $now->diff($ago);
+        if ($diff->d > 0) return "há {$diff->d} dia(s)";
+        if ($diff->h > 0) return "há {$diff->h}h";
+        if ($diff->i > 0) return "há {$diff->i}min";
+        return "agora";
+    }
+}
+
+// Determinar página activa
+$currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($pageTitle); ?> - Painel Admin</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><?php echo htmlspecialchars($pageTitle); ?> - Sala Certa</title>
 
-    <link rel="stylesheet" href="<?php echo $baseUrl; ?>/assets/css/style.css">
-    <link rel="stylesheet" href="<?php echo $baseUrl; ?>/assets/css/header-modern.css">
-    <link rel="stylesheet" href="<?php echo $baseUrl; ?>/assets/css/style-no-sidebar.css">
-    <link rel="stylesheet" href="<?php echo $baseUrl; ?>/assets/css/global.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="shortcut icon" href="<?php echo $baseUrl; ?>/assets/img/logo.png">
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <style>
-        .user-dropdown {
-            position: relative;
-        }
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-        .user-dropdown-toggle {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            height: 40px;
-        }
+  <!-- DataTables CSS -->
+  <link href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 
-        .user-dropdown-toggle:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
+  <!-- Cropper.js CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
 
-        .user-avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #37D0C0;
-            font-weight: 700;
-            font-size: 0.85rem;
-            overflow: hidden;
-        }
+  <!-- Custom CSS (compiled SCSS) -->
+  <link href="<?php echo $baseUrl; ?>/assets/css/main.css" rel="stylesheet">
 
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.1;
-        }
-
-        .user-name {
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-
-        .user-role {
-            font-size: 0.65rem;
-            opacity: 0.9;
-        }
-
-        .dropdown-arrow {
-            font-size: 0.7rem;
-            transition: transform 0.3s ease;
-        }
-
-        .user-dropdown .dropdown-menu {
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-            min-width: 220px;
-            padding: 8px;
-            display: none;
-            z-index: 9999;
-        }
-
-        .user-dropdown.open .dropdown-menu {
-            display: block !important;
-        }
-        
-        .user-dropdown.open .dropdown-arrow {
-            transform: rotate(180deg);
-        }
-
-        .dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            color: #2c3e50;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-        }
-
-        .dropdown-item:hover {
-            background: rgba(55, 208, 192, 0.1);
-            color: #37D0C0;
-        }
-
-        .dropdown-item i {
-            font-size: 1.1rem;
-            width: 20px;
-            text-align: center;
-        }
-
-        .dropdown-divider {
-            height: 1px;
-            background: #e1e8ed;
-            margin: 8px 0;
-        }
-
-        .dropdown-item.danger {
-            color: #e40b0b;
-        }
-
-        .dropdown-item.danger:hover {
-            background: rgba(228, 11, 11, 0.1);
-        }
-
-        .navbar {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        .top-menu-bar {
-            margin: 0 !important;
-            padding: 0 15px !important;
-        }
-    </style>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            window.toggleUserDropdown = function() {
-                const dropdown = document.querySelector('.user-dropdown');
-                if (dropdown) {
-                    dropdown.classList.toggle('open');
-                }
-            };
-
-            document.addEventListener('click', function(event) {
-                const dropdown = document.querySelector('.user-dropdown');
-                if (dropdown && !dropdown.contains(event.target)) {
-                    dropdown.classList.remove('open');
-                }
-            });
-        });
-    </script>
+  <link rel="shortcut icon" href="<?php echo $baseUrl; ?>/assets/img/logo.png">
 </head>
 <body>
-    <div class="wrapper">
-        <div id="content">
-            <?php if (isLoggedIn()): ?>
-            <nav class="navbar navbar-expand-lg">
-                <div class="top-menu-bar">
-                    <div class="menu-left">
-                        <a href="<?php echo $baseUrl; ?>/index.php" class="logo-section">
-                            <img src="<?php echo $baseUrl; ?>/assets/img/logo.png" class="logo-icon" alt="Sala Certa" style="width: 35px; height: 35px;">
-                            <div class="logo-text">
-                                <span class="main">Sala Certa</span>
-                                <span class="sub">Admin</span>
-                            </div>
-                        </a>
-                    </div>
 
-                    <div class="menu-center">
-                        <ul class="nav-menu">
-                            <li class="nav-item-custom">
-                                <a href="<?php echo $baseUrl; ?>/index.php" class="nav-link-custom <?php echo isCurrentPage('index.php') ? 'active' : ''; ?>">
-                                    <i class="fas fa-home"></i>
-                                    <span>Dashboard</span>
-                                </a>
-                            </li>
+<?php if (isLoggedIn()): ?>
 
-                            <li class="nav-item-custom">
-                                <a href="<?php echo $baseUrl; ?>/pages/reservas.php" class="nav-link-custom has-submenu <?php echo isCurrentSection('reservas') ? 'active' : ''; ?>">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    <span>Reservas</span>
-                                </a>
+<?php
+// Foto do usuário
+$userPhoto = null;
+if (isset($_SESSION['usuario_foto']) && !empty($_SESSION['usuario_foto'])) {
+    if (file_exists($_SESSION['usuario_foto'])) {
+        $userPhoto = htmlspecialchars($_SESSION['usuario_foto']) . '?t=' . time();
+    }
+}
+$defaultAvatar = $baseUrl . '/assets/img/default-avatar.png';
+$avatarSrc = $userPhoto ?? $defaultAvatar;
+?>
 
-                                <div class="submenu">
-                                    <a href="<?php echo $baseUrl; ?>/pages/reservas.php" class="submenu-item">
-                                        <i class="fas fa-list"></i>
-                                        <span>Listar Todas</span>
-                                    </a>
-                                    <a href="<?php echo $baseUrl; ?>/pages/nova_reserva.php" class="submenu-item">
-                                        <i class="fas fa-plus"></i>
-                                        <span>Nova Reserva</span>
-                                    </a>
-                                </div>
-                            </li>
+<aside class="sc-sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-text">Sala Certa</span>
+    <span class="logo-subtitle">Reserva de Salas</span>
+  </div>
 
-                            <li class="nav-item-custom">
-                                <a href="<?php echo $baseUrl; ?>/pages/salas.php" class="nav-link-custom has-submenu <?php echo isCurrentSection('salas') ? 'active' : ''; ?>">
-                                    <i class="fas fa-door-open"></i>
-                                    <span>Salas</span>
-                                </a>
+  <nav class="sidebar-nav">
+    <div class="nav-item">
+      <a href="<?php echo $baseUrl; ?>/index.php"
+         class="nav-link <?php echo $currentPage === 'index.php' ? 'active' : ''; ?>">
+        <i class="fas fa-th-large"></i> Dashboard
+      </a>
+    </div>
+    <div class="nav-item">
+      <a href="<?php echo $baseUrl; ?>/pages/reservas.php"
+         class="nav-link <?php echo isCurrentSection('reservas') ? 'active' : ''; ?>">
+        <i class="fas fa-calendar-check"></i> Reservas
+      </a>
+    </div>
+    <div class="nav-item">
+      <a href="<?php echo $baseUrl; ?>/pages/calendario.php"
+         class="nav-link <?php echo $currentPage === 'calendario.php' ? 'active' : ''; ?>">
+        <i class="fas fa-calendar-alt"></i> Calendario
+      </a>
+    </div>
+    <?php if (isAdmin()): ?>
+    <div class="nav-item">
+      <a href="<?php echo $baseUrl; ?>/pages/salas.php"
+         class="nav-link <?php echo isCurrentSection('salas') ? 'active' : ''; ?>">
+        <i class="fas fa-door-open"></i> Salas
+      </a>
+    </div>
+    <div class="nav-item">
+      <a href="<?php echo $baseUrl; ?>/pages/usuarios.php"
+         class="nav-link <?php echo isCurrentSection('usuarios') ? 'active' : ''; ?>">
+        <i class="fas fa-users"></i> Usuarios
+      </a>
+    </div>
+    <?php endif; ?>
+    <div class="nav-item">
+      <a href="<?php echo $baseUrl; ?>/pages/relatorios.php"
+         class="nav-link <?php echo $currentPage === 'relatorios.php' ? 'active' : ''; ?>">
+        <i class="fas fa-chart-bar"></i> Relatorios
+      </a>
+    </div>
+  </nav>
 
-                                <div class="submenu">
-                                    <a href="<?php echo $baseUrl; ?>/pages/salas.php" class="submenu-item">
-                                        <i class="fas fa-list"></i>
-                                        <span>Listar Todas</span>
-                                    </a>
-                                    <a href="<?php echo $baseUrl; ?>/pages/nova_sala.php" class="submenu-item">
-                                        <i class="fas fa-plus"></i>
-                                        <span>Nova Sala</span>
-                                    </a>
-                                </div>
-                            </li>
+  <div class="sidebar-user">
+    <img src="<?php echo $avatarSrc; ?>" alt="" class="sidebar-avatar">
+    <div class="sidebar-user-info">
+      <div class="sidebar-user-name"><?php echo htmlspecialchars($_SESSION['usuario_nome'] ?? ''); ?></div>
+      <div class="sidebar-user-role"><?php echo htmlspecialchars($_SESSION['usuario_cargo'] ?? ($_SESSION['tipo_usuario'] ?? '')); ?></div>
+    </div>
+    <div class="sidebar-user-actions">
+      <a href="<?php echo $baseUrl; ?>/pages/configuracoes.php" title="Configurações"><i class="fas fa-cog"></i></a>
+      <a href="<?php echo $baseUrl; ?>/logout.php" title="Sair"><i class="fas fa-sign-out-alt"></i></a>
+    </div>
+  </div>
+</aside>
 
-                            <li class="nav-item-custom">
-                                <a href="<?php echo $baseUrl; ?>/pages/usuarios.php" class="nav-link-custom has-submenu <?php echo isCurrentSection('usuarios') ? 'active' : ''; ?>">
-                                    <i class="fas fa-users"></i>
-                                    <span>Usuários</span>
-                                </a>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-                                <div class="submenu">
-                                    <a href="<?php echo $baseUrl; ?>/pages/usuarios.php" class="submenu-item">
-                                        <i class="fas fa-list"></i>
-                                        <span>Listar Todos</span>
-                                    </a>
-                                    <a href="<?php echo $baseUrl; ?>/pages/novo_usuario.php" class="submenu-item">
-                                        <i class="fas fa-user-plus"></i>
-                                        <span>Novo Usuário</span>
-                                    </a>
-                                </div>
-                            </li>
-
-                            <li class="nav-item-custom">
-                                <a href="<?php echo $baseUrl; ?>/pages/relatorios.php" class="nav-link-custom <?php echo isCurrentPage('relatorios.php') ? 'active' : ''; ?>">
-                                    <i class="fas fa-chart-line"></i>
-                                    <span>Relatórios</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="menu-right">
-                        <div class="quick-actions">
-                            <button class="quick-action-btn" onclick="window.location.href='<?php echo $baseUrl; ?>/pages/nova_reserva.php'" data-bs-toggle="tooltip" title="Nova Reserva">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-
-                        <div class="user-dropdown">
-                            <div class="user-dropdown-toggle" onclick="toggleUserDropdown()">
-                                <div class="user-avatar">
-                                    <?php
-                                    $foto_existe = false;
-                                    if (isset($_SESSION['usuario_foto']) && !empty($_SESSION['usuario_foto'])) {
-                                        if (file_exists($_SESSION['usuario_foto'])) {
-                                            $foto_existe = true;
-                                            echo '<img src="' . htmlspecialchars($_SESSION['usuario_foto']) . '?t=' . time() . '" alt="' . htmlspecialchars($_SESSION['usuario_nome']) . '">';
-                                        }
-                                    }
-
-                                    if (!$foto_existe) {
-                                        echo strtoupper(substr($_SESSION['usuario_nome'], 0, 1));
-                                    }
-                                    ?>
-                                </div>
-                                <div class="user-info">
-                                    <span class="user-name"><?php echo htmlspecialchars($_SESSION['usuario_nome']); ?></span>
-                                    <span class="user-role">Administrador</span>
-                                </div>
-                                <i class="fas fa-chevron-down dropdown-arrow"></i>
-                            </div>
-
-                            <div class="dropdown-menu">
-                                <a href="<?php echo $baseUrl; ?>/pages/perfil.php" class="dropdown-item">
-                                    <i class="fas fa-user"></i>
-                                    <span>Meu Perfil</span>
-                                </a>
-                                <a href="<?php echo $baseUrl; ?>/pages/configuracoes.php" class="dropdown-item">
-                                    <i class="fas fa-cog"></i>
-                                    <span>Configurações</span>
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a href="<?php echo $baseUrl; ?>/logout.php" class="dropdown-item danger">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                    <span>Sair</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+<div class="sc-main">
+  <header class="sc-topbar">
+    <div class="topbar-left">
+      <button class="hamburger" id="hamburgerBtn">
+        <i class="fas fa-bars"></i>
+      </button>
+      <nav class="breadcrumb">
+        <a href="<?php echo $baseUrl; ?>/index.php">Dashboard</a>
+        <span class="separator">/</span>
+        <span class="current"><?php echo htmlspecialchars($pageTitle ?? 'Dashboard'); ?></span>
+      </nav>
+    </div>
+    <div class="topbar-right">
+      <!-- Notification bell -->
+      <div style="position:relative">
+        <?php
+        require_once CLASSES_PATH . '/Notificacao.php';
+        $notifCount = Notificacao::contarNaoLidas($_SESSION['usuario_id'] ?? 0);
+        if (isset($_SESSION['usuario_id'])) {
+            Notificacao::gerarLembretes($_SESSION['usuario_id']);
+        }
+        ?>
+        <button class="notification-bell" id="notifBell">
+          <i class="fas fa-bell"></i>
+          <?php if ($notifCount > 0): ?>
+          <span class="notification-badge"><?php echo $notifCount; ?></span>
+          <?php endif; ?>
+        </button>
+        <!-- Notification dropdown -->
+        <div class="notification-dropdown" id="notifDropdown">
+          <div class="notification-header">
+            <h6>Notificações</h6>
+            <button class="mark-all-read" id="markAllRead">Marcar todas como lidas</button>
+          </div>
+          <div class="notification-list" id="notifList">
+            <?php
+            $notifs = Notificacao::listarPorUsuario($_SESSION['usuario_id'] ?? 0, 10);
+            if (empty($notifs)): ?>
+              <div class="notification-empty">Nenhuma notificação</div>
+            <?php else:
+              foreach ($notifs as $n):
+                $iconClass = 'icon-' . $n['TIPO'];
+                $icons = [
+                    'confirmacao'  => 'fa-check',
+                    'lembrete'     => 'fa-clock',
+                    'cancelamento' => 'fa-times',
+                    'conflito'     => 'fa-exclamation-triangle'
+                ];
+                $icon   = $icons[$n['TIPO']] ?? 'fa-bell';
+                $unread = !$n['LIDA'] ? 'unread' : '';
+            ?>
+              <div class="notification-item <?php echo $unread; ?>" data-id="<?php echo $n['NOTIFICACAO_ID']; ?>">
+                <div class="notification-icon <?php echo $iconClass; ?>">
+                  <i class="fas <?php echo $icon; ?>"></i>
                 </div>
-            </nav>
-            <?php endif; ?>
+                <div class="notification-content">
+                  <div class="notification-text"><?php echo htmlspecialchars($n['MENSAGEM']); ?></div>
+                  <div class="notification-time"><?php echo timeAgo($n['DATA_CRIACAO']); ?></div>
+                </div>
+              </div>
+            <?php endforeach; endif; ?>
+          </div>
+        </div>
+      </div>
 
-            <div class="container-fluid py-4">
+      <img src="<?php echo $avatarSrc; ?>" alt="" class="topbar-avatar">
+    </div>
+  </header>
+
+  <main class="sc-content">
+
+<?php else: ?>
+<div class="sc-main">
+  <main class="sc-content">
+<?php endif; ?>
