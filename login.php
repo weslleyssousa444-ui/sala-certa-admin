@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once 'config/config.php';
 require_once 'config/conexao.php';
 require_once 'classes/Usuario.php';
@@ -22,12 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $usuario = new Usuario();
         if ($usuario->login($email, $senha)) {
-            if ($usuario->getTipoUsuario() == 'admin' || !empty($usuario->getSetor())) {
-                $_SESSION['usuario_id'] = $usuario->getId();
-                $_SESSION['usuario_nome'] = $usuario->getNome();
-                $_SESSION['usuario_email'] = $usuario->getEmail();
-                $_SESSION['tipo_usuario'] = $usuario->getTipoUsuario();
-                $_SESSION['setor'] = $usuario->getSetor();
+            if ($usuario->getTipoUsuario() == 'admin' || !empty($usuario->getUsuarioDepartamento())) {
+                $_SESSION['usuario_id']             = $usuario->getId();
+                $_SESSION['usuario_nome']           = $usuario->getNome();
+                $_SESSION['usuario_email']          = $usuario->getEmail();
+                $_SESSION['tipo_usuario']           = $usuario->getTipoUsuario();
+                $_SESSION['usuario_departamento']   = $usuario->getUsuarioDepartamento();
+                $_SESSION['usuario_cargo']          = $usuario->getUsuarioCargo();
 
                 $usuario_dados = Usuario::buscarPorId($usuario->getId());
                 if (!empty($usuario_dados['FOTO_PERFIL']) && file_exists($usuario_dados['FOTO_PERFIL'])) {
@@ -52,62 +53,132 @@ $pageTitle = 'Login';
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><?php echo htmlspecialchars($pageTitle); ?> - <?php echo htmlspecialchars(APP_NAME); ?></title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-    <link rel="stylesheet" href="assets/css/login.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
 </head>
-<body>
-    <div class="login-container">
-        <div class="login-form">
-            <div class="text-center mb-4">
-                <img src="assets/img/logo.png" alt="Logo Sala Certa" class="mb-3" style="max-width: 120px; display: block; margin-left: auto; margin-right: auto;">        
-                <h2 style="color: white; font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">Sala Certa Admin</h2>        
-                <p style="color: rgba(255,255,255,0.9);">Painel Administrativo</p>
+<body class="login-page">
+
+    <!-- Left side: visual (hidden on mobile) -->
+    <div class="login-visual">
+        <div class="visual-bg">
+            <img src="assets/img/hero-bg.jpg" alt="" />
+        </div>
+        <div class="visual-overlay"></div>
+        <div class="visual-content">
+            <span class="visual-logo">Sala Certa</span>
+
+            <div class="visual-headline">
+                <h1>Gerencie suas reservas <span>com elegância</span></h1>
+                <p>Painel administrativo para controle completo de salas, reservas e usuários.</p>
             </div>
 
-            <?php if (!empty($error)): ?>
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <?php echo htmlspecialchars($error); ?>
+            <div class="visual-features">
+                <div class="visual-feature">
+                    <span class="feature-icon"><i class="fas fa-calendar-check"></i></span>
+                    <span class="feature-text">Reservas em tempo real</span>
                 </div>
-            <?php endif; ?>
-
-            <form method="post" action="">
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="seuemail@exemplo.com" required autocomplete="username" />
-                    </div>
+                <div class="visual-feature">
+                    <span class="feature-icon"><i class="fas fa-door-open"></i></span>
+                    <span class="feature-text">Gestão completa de salas</span>
                 </div>
-
-                <div class="mb-3">
-                    <label for="senha" class="form-label">Senha</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                        <input type="password" class="form-control" id="senha" name="senha" placeholder="••••••••" required autocomplete="current-password" />
-                    </div>
+                <div class="visual-feature">
+                    <span class="feature-icon"><i class="fas fa-users"></i></span>
+                    <span class="feature-text">Controle de usuários e acessos</span>
                 </div>
-
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary">Entrar</button>
-                </div>
-            </form>
-
-            <div class="text-center mt-3">
-                <small class="text-muted">
-                    <i class="fas fa-info-circle"></i>
-                    Usuários comuns devem utilizar o aplicativo móvel
-                </small>
             </div>
 
-            <div class="text-center mt-3">
-                <small>Versão <?php echo htmlspecialchars(APP_VERSION); ?></small>
+            <div class="visual-footer">
+                Sala Certa v<?php echo htmlspecialchars(APP_VERSION); ?>
             </div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Right side: form -->
+    <div class="login-form-side">
+
+        <!-- Mobile logo (hidden on desktop) -->
+        <span class="mobile-logo">Sala Certa</span>
+
+        <div class="login-form-container">
+            <div class="login-form-header">
+                <h2>Bem-vindo de volta</h2>
+                <p>Acesse o painel de reservas</p>
+            </div>
+
+            <div class="login-card">
+
+                <?php if (!empty($error)): ?>
+                    <div class="sc-alert sc-alert-danger login-alert">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span><?php echo htmlspecialchars($error); ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <form method="POST" class="login-form">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-control"
+                            placeholder="seu@email.com"
+                            required
+                            autocomplete="username"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="senha" class="form-label">Senha</label>
+                        <div class="password-field">
+                            <input
+                                type="password"
+                                id="senha"
+                                name="senha"
+                                class="form-control"
+                                placeholder="••••••••"
+                                required
+                                autocomplete="current-password"
+                            />
+                            <button type="button" class="password-toggle" onclick="toggleSenha()" aria-label="Mostrar/ocultar senha">
+                                <i class="fas fa-eye" id="senhaIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary login-submit">
+                        <i class="fas fa-sign-in-alt me-2"></i>Entrar
+                    </button>
+                </form>
+
+            </div><!-- /.login-card -->
+
+            <div class="login-footer">
+                <p>Sala Certa v<?php echo htmlspecialchars(APP_VERSION); ?> &mdash; Apenas administradores</p>
+            </div>
+        </div><!-- /.login-form-container -->
+
+    </div><!-- /.login-form-side -->
+
+    <script>
+        function toggleSenha() {
+            const input = document.getElementById('senha');
+            const icon  = document.getElementById('senhaIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+    </script>
+
 </body>
 </html>
