@@ -1,0 +1,40 @@
+{
+    "name": "salacerta/admin",
+    "description": "Sistema de Gerenciamento e Reserva de Salas - Sala Certa",
+    "type": "project",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Sala Certa Team"
+        }
+    ],
+    "require": {
+        "php": ">=8.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
+    "autoload": {
+        "classmap": [
+            "classes/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test:unit": "phpunit tests/Unit",
+        "test:coverage": "phpunit --coverage-html tests/coverage",
+        "test:verbose": "phpunit --testdox --colors=always"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

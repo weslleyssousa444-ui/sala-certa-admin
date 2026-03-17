@@ -1,0 +1,22 @@
+
+# Testar classe específica
+php vendor/bin/phpunit tests/Unit/UsuarioTest.php
+
+# Entre na pasta de domínios
+cd domains/salacerta.online/public_html
+
+#SERVE
+ssh -p 65002 u901713138@82.25.73.178
+
+TESTE TOTAL
+./vendor/bin/phpunit --testdox
+
+Remover Vendor 
+rm -rf vendor
+
+Clear Cache COmposer
+composer clear-cache
+
+INstall
+composer install
+

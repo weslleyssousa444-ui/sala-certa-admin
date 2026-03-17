@@ -1,0 +1,39 @@
+# Dependências
+/vendor/
+
+# Composer
+composer.phar
+
+# Cache de testes
+.phpunit.cache/
+.phpunit.result.cache
+
+# Relatórios de testes
+tests/Integration/reports/
+tests/logs/
+report.xml
+
+# Uploads de usuários
+/uploads/*
+!/uploads/.gitkeep
+
+# Backups de editor
+*.save
+*.save1
+*.save2
+*.bak
+*.swp
+*~
+
+# macOS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.sublime-*
+
+# Vídeos e documentação pesada
+tests/Documentação de Testes/*.mp4
+tests/Documentação de Testes/*.zip
