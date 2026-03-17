@@ -1,364 +1,336 @@
-// ===== SALA CERTA - SCRIPTS MODERNOS =====
+// ===== SALA CERTA ADMIN v2.0 =====
+// Obsidian & Gold design system
 
-// Aguardar carregamento completo do DOM
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // ===== TOGGLE SIDEBAR =====
-    const sidebarCollapse = document.getElementById('sidebarCollapse');
-    const sidebar = document.getElementById('sidebar');
-    
-    if (sidebarCollapse && sidebar) {
-        sidebarCollapse.addEventListener('click', function() {
-            sidebar.classList.toggle('active');
-            
-            // Adicionar animação suave
-            sidebar.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-        });
-        
-        // Fechar sidebar ao clicar fora (apenas em mobile)
-        document.addEventListener('click', function(e) {
-            if (window.innerWidth <= 992) {
-                if (!sidebar.contains(e.target) && !sidebarCollapse.contains(e.target)) {
-                    sidebar.classList.add('active');
-                }
-            }
+// ── 1. SIDEBAR TOGGLE (mobile) ────────────────────────────────────────────────
+function initSidebar() {
+    const toggle  = document.querySelector('.sidebar-toggle');
+    const sidebar = document.querySelector('.sc-sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+
+    if (!toggle || !sidebar) return;
+
+    toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        if (overlay) overlay.classList.toggle('active');
+    });
+
+    if (overlay) {
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
         });
     }
-    
-    // ===== TOOLTIPS BOOTSTRAP =====
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl, {
-            animation: true,
-            delay: { show: 100, hide: 100 }
-        });
+}
+
+// ── 2. NOTIFICATION DROPDOWN ──────────────────────────────────────────────────
+function initNotifications() {
+    const bell     = document.querySelector('.notification-bell');
+    const dropdown = document.querySelector('.notification-dropdown');
+
+    if (!bell || !dropdown) return;
+
+    bell.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
     });
-    
-    // ===== CONFIRMAÇÃO DE EXCLUSÃO =====
-    const deleteButtons = document.querySelectorAll('.btn-delete');
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const confirmDelete = confirm('Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.');
-            
-            if (confirmDelete) {
-                // Adicionar animação de loading
-                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                this.disabled = true;
-                
-                // Redirecionar após breve delay para mostrar animação
-                setTimeout(() => {
-                    window.location.href = this.href;
-                }, 300);
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target) && !bell.contains(e.target)) {
+            dropdown.classList.remove('open');
+        }
+    });
+
+    // "Marcar todas como lidas" button
+    const markAllBtn = dropdown.querySelector('.mark-all-read');
+    if (markAllBtn) {
+        markAllBtn.addEventListener('click', () => {
+            fetch('pages/marcar_notificacoes.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'mark_all_read' })
+            })
+            .then(res => res.json())
+            .then(() => {
+                dropdown.querySelectorAll('.notification-item.unread')
+                    .forEach(item => item.classList.remove('unread'));
+                const badge = bell.querySelector('.notification-badge');
+                if (badge) badge.remove();
+            })
+            .catch(err => console.warn('Notificações: erro ao marcar como lidas', err));
+        });
+    }
+}
+
+// ── 3. SCROLL REVEAL ──────────────────────────────────────────────────────────
+function initScrollReveal() {
+    const revealEls   = document.querySelectorAll('.reveal');
+    const staggerParents = document.querySelectorAll('.reveal-stagger');
+
+    if (!revealEls.length && !staggerParents.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(el => observer.observe(el));
+
+    // Stagger: reveal children with incremental delay
+    const staggerObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const children = entry.target.querySelectorAll(':scope > *');
+                children.forEach((child, i) => {
+                    setTimeout(() => child.classList.add('revealed'), i * 100);
+                });
+                staggerObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    staggerParents.forEach(el => staggerObserver.observe(el));
+}
+
+// ── 4. COUNT-UP ANIMATION ─────────────────────────────────────────────────────
+function initCountUp() {
+    const countEls = document.querySelectorAll('.count-up[data-target]');
+    if (!countEls.length) return;
+
+    const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+
+    const animate = (el, target, duration) => {
+        let start = null;
+        const step = (timestamp) => {
+            if (!start) start = timestamp;
+            const elapsed  = timestamp - start;
+            const progress = Math.min(elapsed / duration, 1);
+            el.textContent = Math.floor(easeOut(progress) * target);
+            if (progress < 1) requestAnimationFrame(step);
+            else el.textContent = target;
+        };
+        requestAnimationFrame(step);
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = parseInt(entry.target.dataset.target, 10);
+                if (!isNaN(target)) animate(entry.target, target, 1500);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    countEls.forEach(el => observer.observe(el));
+}
+
+// ── 5. DATATABLES INIT ────────────────────────────────────────────────────────
+function initDataTables() {
+    if (typeof $ === 'undefined' || typeof $.fn.DataTable === 'undefined') return;
+
+    $('.sc-table').each(function () {
+        if ($.fn.DataTable.isDataTable(this)) return;
+
+        $(this).DataTable({
+            pageLength: 10,
+            responsive: true,
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json'
+            },
+            drawCallback: function () {
+                // Style pagination buttons with gold theme
+                document.querySelectorAll('.paginate_button').forEach(btn => {
+                    btn.classList.add('sc-page-btn');
+                });
             }
         });
     });
-    
-    // ===== VALIDAÇÃO DE FORMULÁRIOS =====
-    const forms = document.querySelectorAll('.needs-validation');
-    forms.forEach(form => {
-        form.addEventListener('submit', function(event) {
+}
+
+// ── 6. FORM VALIDATION ────────────────────────────────────────────────────────
+function initFormValidation() {
+    document.querySelectorAll('.needs-validation').forEach(form => {
+        form.addEventListener('submit', function (e) {
             if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-                
-                // Scroll para o primeiro campo inválido
+                e.preventDefault();
+                e.stopPropagation();
+
                 const firstInvalid = form.querySelector(':invalid');
                 if (firstInvalid) {
                     firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     firstInvalid.focus();
                 }
             }
-            
             form.classList.add('was-validated');
         }, false);
     });
-    
-    // ===== ANIMAÇÃO DOS CARDS =====
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '0';
-                entry.target.style.transform = 'translateY(20px)';
-                
-                setTimeout(() => {
-                    entry.target.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }, 100);
-                
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-    
-    // Observar todos os cards
-    const cards = document.querySelectorAll('.card, .stats-card');
-    cards.forEach(card => observer.observe(card));
-    
-    // ===== DATATABLES CONFIGURAÇÃO - REMOVIDO (já está no footer.php) =====
-    // A inicialização do DataTables agora está centralizada no footer.php
-    
-    // ===== GRÁFICOS - CONFIGURAÇÃO GLOBAL =====
-    if (typeof Chart !== 'undefined') {
-        Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
-        Chart.defaults.color = '#7f8c8d';
-        Chart.defaults.plugins.legend.display = true;
-        Chart.defaults.plugins.legend.position = 'bottom';
-        Chart.defaults.elements.line.tension = 0.4;
-        Chart.defaults.elements.point.radius = 4;
-        Chart.defaults.elements.point.hoverRadius = 6;
-    }
-    
-    // ===== FUNÇÃO PARA GRÁFICO DE RESERVAS =====
-    window.initReservasChart = function(data) {
-        const ctx = document.getElementById('reservasChart');
-        if (!ctx) return;
-        
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: data.labels,
-                datasets: [{
-                    label: 'Reservas',
-                    data: data.values,
-                    borderColor: '#37D0C0',
-                    backgroundColor: 'rgba(55, 208, 192, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 13
-                        },
-                        borderColor: '#37D0C0',
-                        borderWidth: 1
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            precision: 0
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        });
-    };
-    
-    // ===== FUNÇÃO PARA GRÁFICO DE SALAS =====
-    window.initSalasChart = function(data) {
-        const ctx = document.getElementById('salasChart');
-        if (!ctx) return;
-        
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: data.labels,
-                datasets: [{
-                    label: 'Reservas',
-                    data: data.values,
-                    backgroundColor: [
-                        '#37D0C0',
-                        '#53C598',
-                        '#B3E2D0',
-                        '#7fcfba',
-                        '#a5e0cf'
-                    ],
-                    borderWidth: 0,
-                    borderRadius: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 13
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            precision: 0
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        });
-    };
-    
-    // ===== AUTO-DISMISS ALERTS =====
-    const alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => {
-        setTimeout(() => {
-            const closeButton = alert.querySelector('.btn-close');
-            if (closeButton) {
-                closeButton.click();
-            }
-        }, 5000); // Auto-dismiss após 5 segundos
-    });
-    
-    // ===== ANIMAÇÃO DE NÚMEROS (COUNT UP) =====
-    const animateValue = (element, start, end, duration) => {
-        let startTimestamp = null;
-        const step = (timestamp) => {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            element.innerHTML = Math.floor(progress * (end - start) + start);
-            if (progress < 1) {
-                window.requestAnimationFrame(step);
-            }
-        };
-        window.requestAnimationFrame(step);
-    };
-    
-    // Animar números nos stats cards
-    const statsNumbers = document.querySelectorAll('.stats-card h4');
-    statsNumbers.forEach(stat => {
-        const finalValue = parseInt(stat.textContent);
-        if (!isNaN(finalValue)) {
-            stat.textContent = '0';
-            setTimeout(() => {
-                animateValue(stat, 0, finalValue, 1500);
-            }, 300);
-        }
-    });
-    
-    // ===== SMOOTH SCROLL PARA ÂNCORAS =====
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const href = this.getAttribute('href');
-            if (href !== '#' && href !== '') {
-                e.preventDefault();
-                const target = document.querySelector(href);
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            }
-        });
-    });
-    
-    // ===== LOADING STATE NOS BOTÕES DE SUBMIT =====
-    const submitButtons = document.querySelectorAll('button[type="submit"]');
-    submitButtons.forEach(button => {
-        button.closest('form')?.addEventListener('submit', function(e) {
-            if (this.checkValidity()) {
-                button.disabled = true;
-                const originalText = button.innerHTML;
-                button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processando...';
-                
-                // Restaurar após 5 segundos (failsafe)
-                setTimeout(() => {
-                    button.disabled = false;
-                    button.innerHTML = originalText;
-                }, 5000);
-            }
-        });
-    });
-    
-    // ===== MÁSCARAS DE INPUT =====
-    if (typeof $ !== 'undefined' && typeof $.fn.mask !== 'undefined') {
-        $('.cpf-mask').mask('000.000.000-00');
-        $('.date-mask').mask('00/00/0000');
-        $('.time-mask').mask('00:00');
-        $('.phone-mask').mask('(00) 00000-0000');
-    }
-    
-    // ===== PLACEHOLDER ANIMATION =====
-    const inputs = document.querySelectorAll('.form-control');
-    inputs.forEach(input => {
-        input.addEventListener('focus', function() {
-            this.parentElement.classList.add('focused');
-        });
-        
-        input.addEventListener('blur', function() {
-            if (!this.value) {
-                this.parentElement.classList.remove('focused');
-            }
-        });
-    });
-    
-    // ===== MENSAGEM DE BOAS-VINDAS =====
-    console.log('%c🎉 Sala Certa Admin', 'color: #37D0C0; font-size: 24px; font-weight: bold;');
-    console.log('%cVersão 2.0 - Sistema de Gestão de Reservas', 'color: #53C598; font-size: 14px;');
-    console.log('%cDesenvolvido com ❤️', 'color: #B3E2D0; font-size: 12px;');
-    
-});
+}
 
-// ===== DEBOUNCE FUNCTION (Útil para search) =====
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+// ── 7. DELETE CONFIRMATION ────────────────────────────────────────────────────
+function initDeleteConfirmation() {
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const href = this.href;
+
+            if (confirm('Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.')) {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                this.disabled = true;
+                setTimeout(() => { window.location.href = href; }, 400);
+            }
+        });
+    });
+}
+
+// ── 8. AUTO-DISMISS ALERTS ────────────────────────────────────────────────────
+function initAlerts() {
+    document.querySelectorAll('.sc-alert').forEach(alert => {
+        setTimeout(() => {
+            alert.style.transition = 'opacity 0.6s ease';
+            alert.style.opacity   = '0';
+            setTimeout(() => alert.remove(), 650);
+        }, 5000);
+    });
+}
+
+// ── 9. INPUT MASKS ────────────────────────────────────────────────────────────
+function initMasks() {
+    if (typeof $ === 'undefined' || typeof $.fn.mask === 'undefined') return;
+
+    $('.cpf-mask').mask('000.000.000-00');
+    $('.date-mask').mask('00/00/0000');
+    $('.time-mask').mask('00:00');
+    $('.phone-mask').mask('(00) 00000-0000');
+}
+
+// ── 10. CHART.JS DEFAULTS ─────────────────────────────────────────────────────
+function initChartDefaults() {
+    if (typeof Chart === 'undefined') return;
+
+    Chart.defaults.font.family = "'DM Sans', sans-serif";
+    Chart.defaults.color       = '#6b7280';
+
+    // Gold palette exposed globally for charts
+    window.SC_CHART_COLORS = {
+        gold:         '#c9a84c',
+        goldLight:    'rgba(201,168,76,0.2)',
+        charcoal:     '#1a1a2e',
+        offwhite:     '#f8f7f4',
+        palette: ['#c9a84c', '#e4c97e', '#a07830', '#f0dfa0', '#7a5c20', '#d4b468']
     };
 }
 
-// ===== LOADING SCREEN (Opcional) =====
-window.addEventListener('load', function() {
-    const loader = document.getElementById('loader');
-    if (loader) {
-        loader.style.opacity = '0';
-        setTimeout(() => {
-            loader.style.display = 'none';
-        }, 300);
-    }
+// ── 11. PARALLAX (landing page only) ─────────────────────────────────────────
+function initParallax() {
+    const heroBg = document.querySelector('.hero-bg');
+    if (!heroBg) return;
+
+    const applyParallax = () => {
+        if (window.innerWidth < 992) {
+            heroBg.style.transform = '';
+            return;
+        }
+        heroBg.style.transform = `translateY(${window.scrollY * 0.3}px)`;
+    };
+
+    window.addEventListener('scroll', applyParallax, { passive: true });
+    window.addEventListener('resize', applyParallax, { passive: true });
+}
+
+// ── 12. SETTINGS TAB SWITCHING ────────────────────────────────────────────────
+function initSettingsTabs() {
+    const tabs = document.querySelectorAll('.settings-tab');
+    if (!tabs.length) return;
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+
+            const target = this.dataset.tab;
+            document.querySelectorAll('.settings-panel').forEach(panel => {
+                panel.style.display = panel.dataset.panel === target ? '' : 'none';
+            });
+        });
+    });
+
+    // Activate first tab by default if none is active
+    const active = document.querySelector('.settings-tab.active');
+    if (!active && tabs[0]) tabs[0].click();
+}
+
+// ── 13. PASSWORD TOGGLE ───────────────────────────────────────────────────────
+function initPasswordToggle() {
+    document.querySelectorAll('.toggle-password').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const input = document.querySelector(this.dataset.target)
+                       || this.closest('.input-group')?.querySelector('input');
+            if (!input) return;
+
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+
+            const icon = this.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-eye',      !isPassword);
+                icon.classList.toggle('fa-eye-slash', isPassword);
+            }
+        });
+    });
+}
+
+// ── 14. DEBOUNCE UTILITY ──────────────────────────────────────────────────────
+function debounce(func, wait = 300) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
+
+// Expose globally so inline scripts can use it
+window.debounce = debounce;
+
+// ── 15. CONSOLE BRANDING ──────────────────────────────────────────────────────
+function printBranding() {
+    console.log(
+        '%cSala Certa Admin v2.0',
+        'color:#c9a84c;font-family:Playfair Display,serif;font-size:20px;font-weight:700;'
+    );
+    console.log(
+        '%cObsidian & Gold • Sistema de Gestão de Reservas',
+        'color:#f8f7f4;background:#1a1a2e;padding:4px 8px;border-radius:4px;font-size:12px;'
+    );
+}
+
+// ── BOOTSTRAP TOOLTIPS (kept for backwards compatibility) ─────────────────────
+function initTooltips() {
+    if (typeof bootstrap === 'undefined') return;
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+        new bootstrap.Tooltip(el, { animation: true, delay: { show: 100, hide: 100 } });
+    });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    initSidebar();
+    initNotifications();
+    initScrollReveal();
+    initCountUp();
+    initDataTables();
+    initFormValidation();
+    initDeleteConfirmation();
+    initAlerts();
+    initMasks();
+    initChartDefaults();
+    initParallax();
+    initSettingsTabs();
+    initPasswordToggle();
+    initTooltips();
+    printBranding();
 });
