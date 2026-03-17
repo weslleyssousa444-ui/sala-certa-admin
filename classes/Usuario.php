@@ -56,7 +56,7 @@ class Usuario {
                 $this->nome = $resultado['USUARIO_NOME'];
                 $this->email = $resultado['USUARIO_EMAIL'];
                 $this->cpf = $resultado['USUARIO_CPF'];
-                $this->cargo = $resultado['USUARIO_CARGO'];
+                $this->cargo = $resultado['USUARIO_CARGO'] ?? '';
                 $this->tipoUsuario = $resultado['TIPO_USUARIO'] ?? 'comum';
                 $this->usuarioDepartamento = $resultado['USUARIO_DEPARTAMENTO'] ?? '';
 

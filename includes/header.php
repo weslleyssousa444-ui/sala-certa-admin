@@ -153,10 +153,19 @@ $avatarSrc = $userPhoto ?? $defaultAvatar;
       <!-- Notification bell -->
       <div style="position:relative">
         <?php
-        require_once CLASSES_PATH . '/Notificacao.php';
-        $notifCount = Notificacao::contarNaoLidas($_SESSION['usuario_id'] ?? 0);
-        if (isset($_SESSION['usuario_id'])) {
-            Notificacao::gerarLembretes($_SESSION['usuario_id']);
+        $notifCount = 0;
+        $notifs = [];
+        try {
+            require_once CLASSES_PATH . '/Notificacao.php';
+            $notifCount = Notificacao::contarNaoLidas($_SESSION['usuario_id'] ?? 0);
+            if (isset($_SESSION['usuario_id'])) {
+                Notificacao::gerarLembretes($_SESSION['usuario_id']);
+            }
+            $notifs = Notificacao::listarPorUsuario($_SESSION['usuario_id'] ?? 0, 10);
+        } catch (Throwable $e) {
+            // Tabela NOTIFICACAO pode não existir ainda — ignorar
+            $notifCount = 0;
+            $notifs = [];
         }
         ?>
         <button class="notification-bell" id="notifBell">
@@ -172,21 +181,19 @@ $avatarSrc = $userPhoto ?? $defaultAvatar;
             <button class="mark-all-read" id="markAllRead">Marcar todas como lidas</button>
           </div>
           <div class="notification-list" id="notifList">
-            <?php
-            $notifs = Notificacao::listarPorUsuario($_SESSION['usuario_id'] ?? 0, 10);
-            if (empty($notifs)): ?>
+            <?php if (empty($notifs)): ?>
               <div class="notification-empty">Nenhuma notificação</div>
             <?php else:
               foreach ($notifs as $n):
-                $iconClass = 'icon-' . $n['TIPO'];
+                $iconClass = 'icon-' . ($n['TIPO'] ?? 'info');
                 $icons = [
                     'confirmacao'  => 'fa-check',
                     'lembrete'     => 'fa-clock',
                     'cancelamento' => 'fa-times',
                     'conflito'     => 'fa-exclamation-triangle'
                 ];
-                $icon   = $icons[$n['TIPO']] ?? 'fa-bell';
-                $unread = !$n['LIDA'] ? 'unread' : '';
+                $icon   = $icons[$n['TIPO'] ?? ''] ?? 'fa-bell';
+                $unread = empty($n['LIDA']) ? 'unread' : '';
             ?>
               <div class="notification-item <?php echo $unread; ?>" data-id="<?php echo $n['NOTIFICACAO_ID']; ?>">
                 <div class="notification-icon <?php echo $iconClass; ?>">
