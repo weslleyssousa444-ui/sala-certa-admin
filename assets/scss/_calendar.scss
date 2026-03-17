@@ -1,0 +1,543 @@
+// =============================================================================
+// CALENDAR — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// .sc-calendar — FullCalendar Wrapper
+// -----------------------------------------------------------------------------
+
+.sc-calendar {
+  @include card-base;
+  overflow: hidden;
+
+  .sc-calendar-header {
+    @include flex-between;
+    padding: $spacing-5 $spacing-6;
+    border-bottom: 1px solid $gray-border;
+    background-color: $white;
+
+    @include mobile {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-3;
+    }
+  }
+
+  .sc-calendar-title {
+    font-family: $font-display;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $charcoal;
+  }
+
+  .sc-calendar-toolbar {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+
+    @include mobile {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+
+  // View toggle buttons
+  .sc-calendar-view-btn {
+    padding: $spacing-2 $spacing-4;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-wide;
+    border: 1.5px solid $gray-border;
+    border-radius: $radius-md;
+    background-color: $white;
+    color: $gray-medium;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    &:hover {
+      border-color: $gold;
+      color: $gold;
+    }
+
+    &.active {
+      background-color: $gold;
+      border-color: $gold;
+      color: $charcoal;
+    }
+  }
+
+  // Navigation arrows
+  .sc-calendar-nav {
+    display: flex;
+    align-items: center;
+    gap: $spacing-1;
+
+    button {
+      width: 32px;
+      height: 32px;
+      border-radius: $radius-full;
+      border: 1.5px solid $gray-border;
+      background: $white;
+      color: $gray-medium;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: $transition-fast;
+
+      &:hover {
+        background-color: $gold;
+        border-color: $gold;
+        color: $charcoal;
+      }
+    }
+
+    .sc-calendar-current-label {
+      font-family: $font-display;
+      font-size: $font-size-md;
+      font-weight: $font-weight-semibold;
+      color: $charcoal;
+      min-width: 160px;
+      text-align: center;
+    }
+  }
+
+  // Main calendar body
+  .sc-calendar-body {
+    padding: $spacing-4;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// FullCalendar Overrides
+// -----------------------------------------------------------------------------
+
+.fc {
+
+  // Toolbar
+  .fc-toolbar {
+    flex-wrap: wrap;
+    gap: $spacing-3;
+    margin-bottom: $spacing-5;
+
+    @include mobile {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  // Toolbar title — Playfair
+  .fc-toolbar-title {
+    font-family: $font-display;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $charcoal;
+
+    @include mobile {
+      font-size: $font-size-lg;
+      text-align: center;
+    }
+  }
+
+  // Toolbar buttons
+  .fc-button {
+    background-color: $white;
+    border: 1.5px solid $gray-border;
+    color: $gray-medium;
+    font-family: $font-body;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    padding: $spacing-2 $spacing-4;
+    border-radius: $radius-md;
+    cursor: pointer;
+    transition: $transition-fast;
+    box-shadow: none;
+    text-transform: capitalize;
+
+    &:hover:not(:disabled) {
+      background-color: rgba($gold, 0.08);
+      border-color: $gold;
+      color: $gold;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($gold, 0.2);
+      outline: none;
+    }
+  }
+
+  // Active button (current view)
+  .fc-button-primary:not(:disabled).fc-button-active,
+  .fc-button-primary:not(:disabled):active {
+    background-color: $gold;
+    border-color: $gold;
+    color: $charcoal;
+    font-weight: $font-weight-semibold;
+    box-shadow: none;
+
+    &:hover {
+      background-color: $gold-hover;
+      border-color: $gold-hover;
+      color: $charcoal;
+    }
+  }
+
+  // Today button
+  .fc-today-button {
+    background-color: $charcoal;
+    border-color: $charcoal;
+    color: $white;
+
+    &:hover:not(:disabled) {
+      background-color: $charcoal-secondary;
+      border-color: $charcoal-secondary;
+      color: $gold;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  // Column headers (Mon, Tue...) — charcoal
+  .fc-col-header-cell {
+    background-color: $charcoal;
+    padding: $spacing-3 $spacing-2;
+
+    a {
+      color: $gray-light;
+      font-family: $font-body;
+      font-size: $font-size-xs;
+      font-weight: $font-weight-semibold;
+      letter-spacing: $letter-spacing-wide;
+      text-transform: uppercase;
+      text-decoration: none;
+
+      &:hover {
+        color: $gold;
+      }
+    }
+  }
+
+  // Day number cells
+  .fc-daygrid-day-number {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $charcoal;
+    padding: $spacing-2;
+    text-decoration: none;
+
+    &:hover {
+      color: $gold;
+    }
+  }
+
+  // Today's date highlight
+  .fc-day-today {
+    background-color: rgba($gold, 0.05) !important;
+
+    .fc-daygrid-day-number {
+      background-color: $gold;
+      color: $charcoal;
+      border-radius: $radius-full;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: $font-weight-bold;
+    }
+  }
+
+  // Other month days
+  .fc-day-other {
+    opacity: 0.45;
+  }
+
+  // Events
+  .fc-event {
+    border: none;
+    border-radius: $radius-sm;
+    padding: 2px $spacing-2;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+    transition: opacity $transition-fast, transform $transition-fast;
+    box-shadow: $shadow-sm;
+
+    &:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+
+    .fc-event-title {
+      font-size: $font-size-xs;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .fc-event-time {
+      font-size: 10px;
+      opacity: 0.85;
+    }
+  }
+
+  // Event status colors
+  .fc-event.status-ativa {
+    background-color: rgba($status-ativa, 0.85);
+    color: $charcoal;
+  }
+
+  .fc-event.status-reservado {
+    background-color: rgba($status-reservado, 0.85);
+    color: $white;
+  }
+
+  .fc-event.status-pendente {
+    background-color: rgba($status-pendente, 0.7);
+    color: $white;
+  }
+
+  .fc-event.status-cancelada {
+    background-color: rgba($status-cancelada, 0.7);
+    color: $white;
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  // Grid borders
+  .fc-scrollgrid {
+    border-color: $gray-border;
+  }
+
+  .fc-scrollgrid td,
+  .fc-scrollgrid th {
+    border-color: $gray-border;
+  }
+
+  .fc-theme-standard td,
+  .fc-theme-standard th {
+    border-color: $gray-border;
+  }
+
+  // List view
+  .fc-list {
+    border-color: $gray-border;
+  }
+
+  .fc-list-event:hover td {
+    background-color: rgba($gold, 0.05);
+  }
+
+  .fc-list-event-title a {
+    color: $charcoal;
+    text-decoration: none;
+
+    &:hover {
+      color: $gold;
+    }
+  }
+
+  .fc-list-day-cushion {
+    background-color: rgba($charcoal, 0.04);
+  }
+
+  .fc-list-day-text,
+  .fc-list-day-side-text {
+    font-family: $font-body;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $charcoal;
+  }
+
+  // Time grid (week/day view)
+  .fc-timegrid-slot {
+    height: 40px;
+    border-color: $gray-border;
+  }
+
+  .fc-timegrid-slot-label {
+    font-size: $font-size-xs;
+    color: $gray-light;
+    font-family: $font-body;
+  }
+
+  // More link
+  .fc-more-link {
+    color: $gold;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+
+    &:hover {
+      color: $gold-hover;
+    }
+  }
+
+  // Popover
+  .fc-popover {
+    border-color: $gray-border;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-lg;
+    overflow: hidden;
+  }
+
+  .fc-popover-header {
+    background-color: $charcoal;
+    color: $white;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    padding: $spacing-3 $spacing-4;
+  }
+
+  .fc-popover-close {
+    color: $gray-light;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: $white;
+    }
+  }
+
+  .fc-popover-body {
+    padding: $spacing-3;
+    background-color: $white;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .calendar-side-panel — Sliding Detail Panel
+// -----------------------------------------------------------------------------
+
+.calendar-side-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 360px;
+  height: 100vh;
+  background-color: $white;
+  box-shadow: $shadow-xl;
+  z-index: calc(#{$z-sidebar} + 50);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+
+  &.open {
+    transform: translateX(0);
+  }
+
+  @include mobile {
+    width: 100%;
+  }
+
+  // Panel header
+  .panel-header {
+    @include flex-between;
+    padding: $spacing-5 $spacing-6;
+    border-bottom: 1px solid $gray-border;
+    background-color: $charcoal;
+    flex-shrink: 0;
+
+    .panel-title {
+      font-family: $font-display;
+      font-size: $font-size-md;
+      font-weight: $font-weight-semibold;
+      color: $white;
+    }
+
+    .panel-close {
+      width: 32px;
+      height: 32px;
+      border-radius: $radius-full;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: $gray-light;
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      transition: $transition-fast;
+
+      &:hover {
+        color: $white;
+        background: rgba($white, 0.1);
+      }
+    }
+  }
+
+  // Panel body
+  .panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: $spacing-5 $spacing-6;
+    @include custom-scrollbar;
+  }
+
+  // Panel footer
+  .panel-footer {
+    padding: $spacing-4 $spacing-6;
+    border-top: 1px solid $gray-border;
+    display: flex;
+    gap: $spacing-3;
+    flex-shrink: 0;
+    background: $off-white;
+  }
+
+  // Event detail rows
+  .detail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-3;
+    margin-bottom: $spacing-4;
+
+    .detail-icon {
+      @include icon-circle(34px, rgba($gold, 0.1), $gold);
+      font-size: 14px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .detail-content {
+      flex: 1;
+
+      .detail-label {
+        font-size: $font-size-xs;
+        font-weight: $font-weight-semibold;
+        text-transform: uppercase;
+        letter-spacing: $letter-spacing-wide;
+        color: $gray-light;
+        margin-bottom: 2px;
+      }
+
+      .detail-value {
+        font-size: $font-size-sm;
+        color: $charcoal;
+        font-weight: $font-weight-medium;
+        line-height: $line-height-normal;
+      }
+    }
+  }
+}
+
+// Overlay for side panel
+.calendar-panel-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba($charcoal-secondary, 0.5);
+  z-index: calc(#{$z-sidebar} + 49);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(2px);
+
+  &.visible {
+    opacity: 1;
+    display: block;
+  }
+}

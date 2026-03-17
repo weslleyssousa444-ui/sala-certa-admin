@@ -1,0 +1,298 @@
+// =============================================================================
+// REPORTS PAGE — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// .reports-page — Root
+// -----------------------------------------------------------------------------
+
+.reports-page {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+}
+
+// -----------------------------------------------------------------------------
+// .reports-filters — Filter Card
+// -----------------------------------------------------------------------------
+
+.reports-filters {
+  @include card-base;
+  padding: $spacing-5 $spacing-6;
+
+  .reports-filters-title {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-wide;
+    color: $gray-medium;
+    margin-bottom: $spacing-4;
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+
+    i {
+      color: $gold;
+    }
+  }
+
+  .filter-groups {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) auto;
+    gap: $spacing-4;
+    align-items: end;
+
+    @include tablet-down {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include mobile {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .filter-group {
+    @include flex-column;
+    gap: $spacing-2;
+
+    .filter-label {
+      font-size: $font-size-xs;
+      font-weight: $font-weight-semibold;
+      color: $charcoal;
+      text-transform: uppercase;
+      letter-spacing: $letter-spacing-wide;
+    }
+
+    select,
+    input[type='date'],
+    input[type='text'] {
+      width: 100%;
+      padding: $spacing-3 $spacing-4;
+      font-family: $font-body;
+      font-size: $font-size-sm;
+      color: $charcoal;
+      background-color: $off-white;
+      border: 1.5px solid $gray-border;
+      border-radius: $radius-md;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $gold;
+        box-shadow: 0 0 0 3px rgba($gold, 0.12);
+        background-color: $white;
+      }
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a0a0b0' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right $spacing-3 center;
+      padding-right: $spacing-8;
+    }
+  }
+
+  .filter-actions {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+
+    @include tablet-down {
+      flex-direction: row;
+      grid-column: 1 / -1;
+    }
+  }
+
+  // Date range presets
+  .date-presets {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    flex-wrap: wrap;
+    margin-top: $spacing-3;
+    padding-top: $spacing-3;
+    border-top: 1px solid $gray-border;
+
+    .preset-label {
+      font-size: $font-size-xs;
+      color: $gray-light;
+      font-weight: $font-weight-medium;
+      white-space: nowrap;
+    }
+
+    .preset-btn {
+      padding: $spacing-1 $spacing-3;
+      font-size: $font-size-xs;
+      font-weight: $font-weight-medium;
+      border: 1px solid $gray-border;
+      border-radius: $radius-full;
+      background: transparent;
+      color: $gray-medium;
+      cursor: pointer;
+      transition: $transition-fast;
+      white-space: nowrap;
+
+      &:hover {
+        border-color: $gold;
+        color: $gold;
+        background-color: rgba($gold, 0.06);
+      }
+
+      &.active {
+        border-color: $gold;
+        background-color: $gold;
+        color: $charcoal;
+        font-weight: $font-weight-semibold;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .reports-summary-row — KPI Summary Bar
+// -----------------------------------------------------------------------------
+
+.reports-summary-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-4;
+
+  @include tablet-down {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-3;
+  }
+
+  .summary-card {
+    @include card-base;
+    padding: $spacing-5;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+    border-left: 3px solid $gold;
+
+    .summary-label {
+      font-size: $font-size-xs;
+      font-weight: $font-weight-semibold;
+      text-transform: uppercase;
+      letter-spacing: $letter-spacing-wide;
+      color: $gray-medium;
+    }
+
+    .summary-value {
+      font-family: $font-display;
+      font-size: $font-size-2xl;
+      font-weight: $font-weight-bold;
+      color: $charcoal;
+      line-height: 1;
+    }
+
+    .summary-change {
+      display: flex;
+      align-items: center;
+      gap: $spacing-1;
+      font-size: $font-size-xs;
+      font-weight: $font-weight-medium;
+
+      &.up   { color: $color-success; }
+      &.down { color: $color-danger; }
+      &.flat { color: $gray-medium; }
+    }
+
+    &.summary-blue   { border-left-color: $status-reservado; }
+    &.summary-green  { border-left-color: $color-success; }
+    &.summary-red    { border-left-color: $color-danger; }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .charts-grid — 2-column Charts Layout
+// -----------------------------------------------------------------------------
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-5;
+
+  @include tablet-down {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-full {
+    grid-column: 1 / -1;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .report-table-section — Data Table Section
+// -----------------------------------------------------------------------------
+
+.report-table-section {
+  @include card-base;
+  overflow: hidden;
+
+  .report-table-header {
+    @include flex-between;
+    padding: $spacing-5 $spacing-6;
+    border-bottom: 1px solid $gray-border;
+    background-color: rgba($off-white, 0.5);
+
+    @include mobile {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-3;
+    }
+
+    .report-table-title {
+      font-family: $font-display;
+      font-size: $font-size-md;
+      font-weight: $font-weight-semibold;
+      color: $charcoal;
+    }
+
+    .report-table-actions {
+      display: flex;
+      align-items: center;
+      gap: $spacing-2;
+    }
+  }
+
+  // Export buttons
+  .export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+    padding: $spacing-2 $spacing-4;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-wide;
+    border-radius: $radius-md;
+    cursor: pointer;
+    transition: $transition-fast;
+    border: 1.5px solid $gray-border;
+    background: $white;
+    color: $gray-medium;
+    text-decoration: none;
+
+    i {
+      font-size: 14px;
+    }
+
+    &:hover {
+      border-color: $gold;
+      color: $gold;
+      background-color: rgba($gold, 0.06);
+    }
+
+    &.export-csv:hover  { border-color: $color-success; color: $color-success; background-color: rgba($color-success, 0.06); }
+    &.export-pdf:hover  { border-color: $color-danger;  color: $color-danger;  background-color: rgba($color-danger, 0.06); }
+    &.export-excel:hover { border-color: $color-success; color: $color-success; background-color: rgba($color-success, 0.06); }
+  }
+}

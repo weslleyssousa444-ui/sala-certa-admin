@@ -1,0 +1,343 @@
+// =============================================================================
+// CARDS — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// .sc-card — Base Card
+// -----------------------------------------------------------------------------
+
+.sc-card {
+  @include card-base;
+  padding: $spacing-6;
+
+  &.sc-card-hover {
+    @include card-hover;
+  }
+
+  &.sc-card-gold {
+    border-left: 4px solid $gold;
+  }
+
+  // Card without padding (for table wrappers etc.)
+  &.sc-card-flush {
+    padding: 0;
+    overflow: hidden;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .sc-card-header — Card Header Row
+// -----------------------------------------------------------------------------
+
+.sc-card-header {
+  @include flex-between;
+  padding-bottom: $spacing-4;
+  margin-bottom: $spacing-4;
+  border-bottom: 1px solid $gray-border;
+
+  .sc-card-title {
+    font-family: $font-display;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $charcoal;
+    margin: 0;
+  }
+
+  .sc-card-subtitle {
+    font-size: $font-size-sm;
+    color: $gray-medium;
+    margin-top: $spacing-1;
+  }
+
+  .sc-card-actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    flex-shrink: 0;
+  }
+
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-3;
+
+    .sc-card-actions {
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+}
+
+// Card footer
+.sc-card-footer {
+  padding-top: $spacing-4;
+  margin-top: $spacing-4;
+  border-top: 1px solid $gray-border;
+  @include flex-between;
+
+  @include mobile {
+    flex-direction: column;
+    gap: $spacing-3;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .stats-card — Dashboard Statistics Card
+// -----------------------------------------------------------------------------
+
+.stats-card {
+  @include card-base;
+  padding: $spacing-6;
+  @include card-hover;
+  position: relative;
+  overflow: hidden;
+
+  // Decorative corner accent
+  &::after {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 80px;
+    height: 80px;
+    background: rgba($gold, 0.06);
+    border-radius: $radius-full;
+  }
+
+  .stats-card-inner {
+    @include flex-between;
+    align-items: flex-start;
+  }
+
+  .stats-card-data {
+    flex: 1;
+  }
+
+  .stats-card-label {
+    font-family: $font-body;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $gray-medium;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-wide;
+    margin-bottom: $spacing-2;
+  }
+
+  .stats-card-number {
+    font-family: $font-display;
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    color: $charcoal;
+    line-height: 1;
+    margin-bottom: $spacing-2;
+  }
+
+  .stats-card-change {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-1;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+
+    &.positive {
+      color: $color-success;
+    }
+
+    &.negative {
+      color: $color-danger;
+    }
+
+    &.neutral {
+      color: $gray-medium;
+    }
+  }
+
+  // Icon circle
+  .stats-card-icon {
+    @include icon-circle(52px);
+    background: rgba($gold, 0.12);
+    color: $gold;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+
+    i {
+      font-size: 22px;
+    }
+  }
+
+  // Color variants for icon
+  &.stats-card-blue .stats-card-icon {
+    background: rgba($color-info, 0.12);
+    color: $color-info;
+  }
+
+  &.stats-card-green .stats-card-icon {
+    background: rgba($color-success, 0.12);
+    color: $color-success;
+  }
+
+  &.stats-card-red .stats-card-icon {
+    background: rgba($color-danger, 0.12);
+    color: $color-danger;
+  }
+
+  // Bottom progress bar
+  .stats-card-progress {
+    margin-top: $spacing-4;
+    height: 3px;
+    background: $gray-bg;
+    border-radius: $radius-full;
+    overflow: hidden;
+
+    .stats-card-progress-bar {
+      height: 100%;
+      background: $gold;
+      border-radius: $radius-full;
+      transition: width 1s ease;
+    }
+  }
+}
+
+// Grid of stats cards
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-5;
+
+  @include tablet-down {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .mobile-card — Replaces Table Rows on Mobile
+// -----------------------------------------------------------------------------
+
+.mobile-card {
+  @include card-base;
+  padding: $spacing-4;
+  margin-bottom: $spacing-3;
+  display: none; // shown only on mobile
+
+  @include mobile {
+    display: block;
+  }
+
+  .mobile-card-header {
+    @include flex-between;
+    margin-bottom: $spacing-3;
+
+    .mobile-card-title {
+      font-weight: $font-weight-semibold;
+      color: $charcoal;
+      font-size: $font-size-base;
+    }
+  }
+
+  .mobile-card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-2;
+  }
+
+  .mobile-card-field {
+    .mobile-card-field-label {
+      font-size: $font-size-xs;
+      color: $gray-light;
+      text-transform: uppercase;
+      letter-spacing: $letter-spacing-wide;
+      margin-bottom: 2px;
+    }
+
+    .mobile-card-field-value {
+      font-size: $font-size-sm;
+      color: $charcoal;
+      font-weight: $font-weight-medium;
+    }
+
+    &.mobile-card-field-full {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .mobile-card-footer {
+    margin-top: $spacing-3;
+    padding-top: $spacing-3;
+    border-top: 1px solid $gray-border;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: $spacing-2;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .feature-card — Landing Page Feature Card
+// -----------------------------------------------------------------------------
+
+.feature-card {
+  @include card-base;
+  @include card-hover;
+  padding: $spacing-8;
+  text-align: center;
+
+  .feature-card-icon {
+    @include icon-circle(64px, rgba($gold, 0.12), $gold);
+    margin: 0 auto $spacing-5;
+
+    i {
+      font-size: 28px;
+    }
+  }
+
+  .feature-card-title {
+    font-family: $font-display;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $charcoal;
+    margin-bottom: $spacing-3;
+  }
+
+  .feature-card-text {
+    font-size: $font-size-sm;
+    color: $gray-medium;
+    line-height: $line-height-relaxed;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .info-card — Sidebar-style Info Card
+// -----------------------------------------------------------------------------
+
+.info-card {
+  @include card-base;
+  padding: $spacing-5;
+  border-left: 4px solid $gold;
+
+  .info-card-label {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-wide;
+    color: $gold;
+    margin-bottom: $spacing-2;
+  }
+
+  .info-card-value {
+    font-family: $font-display;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $charcoal;
+  }
+
+  .info-card-sub {
+    font-size: $font-size-sm;
+    color: $gray-medium;
+    margin-top: $spacing-1;
+  }
+}

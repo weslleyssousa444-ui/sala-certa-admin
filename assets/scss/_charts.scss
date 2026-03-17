@@ -1,0 +1,264 @@
+// =============================================================================
+// CHARTS — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// .chart-container — Base Chart Wrapper
+// -----------------------------------------------------------------------------
+
+.chart-container {
+  @include card-base;
+  padding: $spacing-6;
+
+  .chart-header {
+    @include flex-between;
+    margin-bottom: $spacing-5;
+
+    @include mobile {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-3;
+    }
+  }
+
+  .chart-title {
+    font-family: $font-display;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $charcoal;
+    margin: 0;
+  }
+
+  .chart-subtitle {
+    font-size: $font-size-sm;
+    color: $gray-medium;
+    margin-top: $spacing-1;
+  }
+
+  .chart-actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    flex-shrink: 0;
+  }
+
+  .chart-body {
+    position: relative;
+    width: 100%;
+  }
+
+  // Canvas/chart element
+  canvas {
+    max-width: 100%;
+    display: block;
+  }
+
+  // Empty chart state
+  .chart-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-12;
+    color: $gray-light;
+
+    i {
+      font-size: 40px;
+      margin-bottom: $spacing-3;
+      opacity: 0.4;
+    }
+
+    p {
+      font-size: $font-size-sm;
+      margin: 0;
+    }
+  }
+}
+
+// Charts layout row (2-col)
+.charts-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-5;
+
+  @include tablet-down {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Single full-width chart
+.chart-full {
+  grid-column: 1 / -1;
+}
+
+// -----------------------------------------------------------------------------
+// Chart Period Toggle (day/week/month selector)
+// -----------------------------------------------------------------------------
+
+.chart-period-toggle {
+  display: inline-flex;
+  background-color: $gray-bg;
+  border: 1px solid $gray-border;
+  border-radius: $radius-md;
+  padding: 3px;
+  gap: 2px;
+
+  .period-btn {
+    padding: $spacing-2 $spacing-3;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: $gray-medium;
+    border-radius: calc(#{$radius-md} - 2px);
+    cursor: pointer;
+    transition: $transition-fast;
+    background: transparent;
+    border: none;
+    white-space: nowrap;
+
+    &:hover {
+      color: $charcoal;
+      background-color: rgba($white, 0.7);
+    }
+
+    &.active {
+      background-color: $white;
+      color: $charcoal;
+      font-weight: $font-weight-semibold;
+      box-shadow: $shadow-sm;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Chart Legend
+// -----------------------------------------------------------------------------
+
+.chart-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: $spacing-4;
+  margin-top: $spacing-4;
+  padding-top: $spacing-4;
+  border-top: 1px solid $gray-border;
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    font-size: $font-size-xs;
+    color: $gray-medium;
+    cursor: pointer;
+    transition: opacity $transition-fast;
+
+    &:hover {
+      opacity: 0.75;
+    }
+
+    &.inactive {
+      opacity: 0.4;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .legend-label {
+      font-weight: $font-weight-medium;
+      color: $charcoal;
+    }
+
+    .legend-value {
+      font-weight: $font-weight-semibold;
+      color: $gold;
+      margin-left: $spacing-1;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Chart Tooltip (custom)
+// -----------------------------------------------------------------------------
+
+.chart-tooltip {
+  background-color: $charcoal;
+  color: $white;
+  padding: $spacing-3 $spacing-4;
+  border-radius: $radius-md;
+  box-shadow: $shadow-lg;
+  font-family: $font-body;
+  font-size: $font-size-xs;
+  pointer-events: none;
+  max-width: 200px;
+
+  .tooltip-label {
+    font-weight: $font-weight-semibold;
+    margin-bottom: $spacing-2;
+    color: $gray-light;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-wide;
+    font-size: 10px;
+  }
+
+  .tooltip-item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    margin-bottom: $spacing-1;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .tooltip-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: $radius-full;
+      flex-shrink: 0;
+    }
+
+    .tooltip-value {
+      font-weight: $font-weight-bold;
+      color: $gold;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Donut / Pie chart center label
+// -----------------------------------------------------------------------------
+
+.chart-donut-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+
+  .donut-value {
+    font-family: $font-display;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $charcoal;
+    line-height: 1;
+  }
+
+  .donut-label {
+    font-size: $font-size-xs;
+    color: $gray-medium;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-wide;
+    margin-top: 4px;
+  }
+}
+
+// Chart color palette classes (for dynamic usage)
+.chart-color-1 { color: $gold; }
+.chart-color-2 { color: $status-reservado; }
+.chart-color-3 { color: $color-success; }
+.chart-color-4 { color: $status-cancelada; }
+.chart-color-5 { color: $charcoal-light; }

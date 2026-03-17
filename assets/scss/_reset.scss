@@ -1,0 +1,220 @@
+// =============================================================================
+// RESET — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Box Sizing
+// -----------------------------------------------------------------------------
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+// -----------------------------------------------------------------------------
+// Root & Smooth Scroll
+// -----------------------------------------------------------------------------
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+}
+
+// -----------------------------------------------------------------------------
+// Body
+// -----------------------------------------------------------------------------
+
+body {
+  font-family: $font-body;
+  font-size: $font-size-base;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-normal;
+  color: $charcoal;
+  background-color: $off-white;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+// -----------------------------------------------------------------------------
+// Typography Reset
+// -----------------------------------------------------------------------------
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  color: $charcoal;
+}
+
+p {
+  line-height: $line-height-relaxed;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Links
+// -----------------------------------------------------------------------------
+
+a {
+  color: $gold;
+  text-decoration: none;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: $gold-hover;
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+    border-radius: $radius-sm;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Images & Media
+// -----------------------------------------------------------------------------
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+  vertical-align: middle;
+}
+
+svg {
+  overflow: hidden;
+}
+
+// -----------------------------------------------------------------------------
+// Forms
+// -----------------------------------------------------------------------------
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+}
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+  background-color: transparent;
+  background-image: none;
+  cursor: pointer;
+  border: none;
+}
+
+input,
+textarea,
+select {
+  border: none;
+  outline: none;
+  background: none;
+}
+
+textarea {
+  resize: vertical;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+label {
+  display: inline-block;
+  cursor: pointer;
+}
+
+// -----------------------------------------------------------------------------
+// Lists
+// -----------------------------------------------------------------------------
+
+ul,
+ol {
+  list-style: none;
+}
+
+// -----------------------------------------------------------------------------
+// Tables
+// -----------------------------------------------------------------------------
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+// -----------------------------------------------------------------------------
+// HR
+// -----------------------------------------------------------------------------
+
+hr {
+  border: none;
+  border-top: 1px solid $gray-border;
+  margin: $spacing-6 0;
+}
+
+// -----------------------------------------------------------------------------
+// Selection
+// -----------------------------------------------------------------------------
+
+::selection {
+  background-color: rgba($gold, 0.25);
+  color: $charcoal;
+}
+
+::-moz-selection {
+  background-color: rgba($gold, 0.25);
+  color: $charcoal;
+}
+
+// -----------------------------------------------------------------------------
+// Scrollbar (global)
+// -----------------------------------------------------------------------------
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $gray-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba($charcoal-light, 0.4);
+  border-radius: $radius-full;
+
+  &:hover {
+    background: rgba($charcoal-light, 0.7);
+  }
+}

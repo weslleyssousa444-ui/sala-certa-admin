@@ -1,0 +1,181 @@
+// =============================================================================
+// BADGES — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// .badge-status — Base Status Badge (pill)
+// -----------------------------------------------------------------------------
+
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  padding: 3px $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: $letter-spacing-wide;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1.5;
+  border: 1.5px solid transparent;
+
+  // Status dot
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: $radius-full;
+    background-color: currentColor;
+    flex-shrink: 0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Status Variants
+// -----------------------------------------------------------------------------
+
+// Ativa — Gold
+.badge-ativa {
+  background-color: rgba($status-ativa, 0.12);
+  color: darken($status-ativa, 10%);
+  border-color: rgba($status-ativa, 0.3);
+}
+
+// Reservado — Blue
+.badge-reservado {
+  background-color: rgba($status-reservado, 0.1);
+  color: darken($status-reservado, 10%);
+  border-color: rgba($status-reservado, 0.25);
+}
+
+// Pendente — Gray
+.badge-pendente {
+  background-color: rgba($status-pendente, 0.1);
+  color: darken($status-pendente, 10%);
+  border-color: rgba($status-pendente, 0.25);
+}
+
+// Cancelada — Red
+.badge-cancelada {
+  background-color: rgba($status-cancelada, 0.1);
+  color: darken($status-cancelada, 10%);
+  border-color: rgba($status-cancelada, 0.25);
+}
+
+// Concluída — Green
+.badge-concluida {
+  background-color: rgba($color-success, 0.1);
+  color: darken($color-success, 10%);
+  border-color: rgba($color-success, 0.25);
+}
+
+// -----------------------------------------------------------------------------
+// .badge-recorrente — Recurring Event Badge (gold outline + icon)
+// -----------------------------------------------------------------------------
+
+.badge-recorrente {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  padding: 3px $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: $letter-spacing-wide;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background-color: transparent;
+  color: $gold;
+  border: 1.5px solid $gold;
+
+  i,
+  .recorrente-icon {
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Generic Badges (non-status)
+// -----------------------------------------------------------------------------
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  padding: 3px $spacing-2;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  white-space: nowrap;
+  line-height: 1.5;
+}
+
+.badge-gold {
+  background-color: $gold;
+  color: $charcoal;
+}
+
+.badge-charcoal {
+  background-color: $charcoal;
+  color: $white;
+}
+
+.badge-light {
+  background-color: $gray-bg;
+  color: $gray-medium;
+  border: 1px solid $gray-border;
+}
+
+.badge-success {
+  background-color: $color-success-bg;
+  color: $color-success;
+  border: 1px solid $color-success-border;
+}
+
+.badge-danger {
+  background-color: $color-danger-bg;
+  color: $color-danger;
+  border: 1px solid $color-danger-border;
+}
+
+.badge-warning {
+  background-color: $color-warning-bg;
+  color: $color-warning;
+  border: 1px solid $color-warning-border;
+}
+
+.badge-info {
+  background-color: $color-info-bg;
+  color: $color-info;
+  border: 1px solid $color-info-border;
+}
+
+// Counter badge (floating on icons)
+.badge-counter {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: $radius-full;
+  background-color: $color-danger;
+  color: $white;
+  font-size: 10px;
+  font-weight: $font-weight-bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid $white;
+  line-height: 1;
+}
+
+// Badge pill modifier
+.badge-pill {
+  border-radius: $radius-full;
+  padding-left: $spacing-3;
+  padding-right: $spacing-3;
+}

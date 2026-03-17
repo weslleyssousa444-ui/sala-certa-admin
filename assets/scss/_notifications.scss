@@ -1,0 +1,330 @@
+// =============================================================================
+// NOTIFICATIONS — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// .notification-bell — Bell Icon with Badge
+// -----------------------------------------------------------------------------
+
+.notification-bell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: $radius-full;
+  background: transparent;
+  border: 1px solid $gray-border;
+  color: $gray-medium;
+  cursor: pointer;
+  transition: $transition-fast;
+  flex-shrink: 0;
+
+  i {
+    font-size: 17px;
+    transition: color $transition-fast;
+  }
+
+  &:hover {
+    background-color: $gray-bg;
+    border-color: darken($gray-border, 10%);
+    color: $charcoal;
+  }
+
+  // Active state (dropdown open)
+  &.active {
+    background-color: rgba($gold, 0.08);
+    border-color: rgba($gold, 0.4);
+    color: $gold;
+  }
+
+  // Red notification counter badge
+  .bell-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    min-width: 17px;
+    height: 17px;
+    background-color: $color-danger;
+    color: $white;
+    font-size: 9px;
+    font-weight: $font-weight-bold;
+    border-radius: $radius-full;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+    border: 2px solid $white;
+    line-height: 1;
+    animation: goldPulse 2.5s ease infinite;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .notification-dropdown — Dropdown Panel
+// -----------------------------------------------------------------------------
+
+.notification-dropdown {
+  position: absolute;
+  top: calc(#{$topbar-height} - 4px);
+  right: $spacing-6;
+  width: 380px;
+  background-color: $white;
+  border: 1px solid $gray-border;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-xl;
+  z-index: $z-dropdown;
+  overflow: hidden;
+  display: none;
+  animation: fadeInDown 0.25s ease;
+
+  &.open {
+    display: block;
+  }
+
+  @include mobile {
+    position: fixed;
+    top: $topbar-height;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 0 0 $radius-xl $radius-xl;
+    max-height: calc(100vh - #{$topbar-height});
+    overflow-y: auto;
+  }
+}
+
+// Dropdown header
+.notification-header {
+  @include flex-between;
+  padding: $spacing-4 $spacing-5;
+  border-bottom: 1px solid $gray-border;
+  background-color: $charcoal;
+
+  .notification-header-title {
+    font-family: $font-body;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $white;
+    margin: 0;
+  }
+
+  .notification-mark-all {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: $gold;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 0;
+    text-decoration: none;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: $gold-hover;
+      text-decoration: underline;
+    }
+  }
+}
+
+// Tabs
+.notification-tabs {
+  display: flex;
+  border-bottom: 1px solid $gray-border;
+
+  .notif-tab {
+    flex: 1;
+    padding: $spacing-3;
+    text-align: center;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-wide;
+    color: $gray-medium;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: $transition-fast;
+    background: transparent;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+
+    &:hover {
+      color: $gold;
+    }
+
+    &.active {
+      color: $gold;
+      border-bottom-color: $gold;
+    }
+  }
+}
+
+// Notification list
+.notification-list {
+  max-height: 380px;
+  overflow-y: auto;
+  @include custom-scrollbar;
+}
+
+// Individual notification item
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-3;
+  padding: $spacing-4 $spacing-5;
+  border-bottom: 1px solid rgba($gray-border, 0.5);
+  cursor: pointer;
+  transition: background-color $transition-fast;
+  position: relative;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  // Unread — gold left accent + light bg
+  &.unread {
+    background-color: rgba($gold, 0.04);
+    border-left: 3px solid $gold;
+
+    .notification-item-title {
+      color: $charcoal;
+    }
+  }
+
+  // Read — default gray
+  &.read {
+    background-color: transparent;
+    opacity: 0.75;
+  }
+
+  &:hover {
+    background-color: rgba($gold, 0.06);
+    opacity: 1;
+  }
+
+  // Icon circle, color-coded by type
+  .notification-icon {
+    @include icon-circle(38px);
+    flex-shrink: 0;
+    font-size: 15px;
+    margin-top: 2px;
+
+    // Reservation
+    &.type-reserva {
+      background: rgba($status-reservado, 0.12);
+      color: $status-reservado;
+    }
+
+    // Approval / status change
+    &.type-aprovacao {
+      background: rgba($color-success, 0.12);
+      color: $color-success;
+    }
+
+    // Alert / warning
+    &.type-alerta {
+      background: rgba($color-warning, 0.12);
+      color: $color-warning;
+    }
+
+    // Cancellation
+    &.type-cancelamento {
+      background: rgba($color-danger, 0.12);
+      color: $color-danger;
+    }
+
+    // System / info
+    &.type-sistema {
+      background: rgba($gray-medium, 0.1);
+      color: $gray-medium;
+    }
+
+    // Gold / general notice
+    &.type-aviso {
+      background: rgba($gold, 0.12);
+      color: $gold;
+    }
+  }
+
+  .notification-content {
+    flex: 1;
+    min-width: 0;
+
+    .notification-item-title {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $gray-dark;
+      line-height: $line-height-snug;
+      margin-bottom: 3px;
+      @include truncate(2);
+    }
+
+    .notification-item-body {
+      font-size: $font-size-xs;
+      color: $gray-light;
+      line-height: $line-height-normal;
+      @include truncate(2);
+    }
+
+    .notification-item-time {
+      font-size: $font-size-xs;
+      color: rgba($gray-light, 0.8);
+      margin-top: $spacing-1;
+    }
+  }
+
+  // Unread dot indicator
+  .notification-unread-dot {
+    width: 8px;
+    height: 8px;
+    background-color: $gold;
+    border-radius: $radius-full;
+    flex-shrink: 0;
+    margin-top: 6px;
+    animation: goldPulse 2s ease infinite;
+  }
+}
+
+// Empty notifications state
+.notification-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-12 $spacing-6;
+  text-align: center;
+
+  i {
+    font-size: 36px;
+    color: rgba($gray-light, 0.5);
+    margin-bottom: $spacing-3;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $gray-light;
+    margin: 0;
+  }
+}
+
+// Notification footer
+.notification-footer {
+  padding: $spacing-3 $spacing-5;
+  border-top: 1px solid $gray-border;
+  text-align: center;
+  background-color: $gray-bg;
+
+  a {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $gold;
+    text-decoration: none;
+
+    &:hover {
+      color: $gold-hover;
+      text-decoration: underline;
+    }
+  }
+}

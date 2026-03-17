@@ -1,0 +1,249 @@
+// =============================================================================
+// TYPOGRAPHY — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Google Fonts Import
+// -----------------------------------------------------------------------------
+// NOTE: Include this in <head> in your HTML:
+// <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+// -----------------------------------------------------------------------------
+// Headings
+// -----------------------------------------------------------------------------
+
+h1 {
+  font-family: $font-display;
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  letter-spacing: $letter-spacing-tight;
+  color: $charcoal;
+
+  @include mobile {
+    font-size: $font-size-2xl;
+  }
+}
+
+h2 {
+  font-family: $font-display;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  letter-spacing: $letter-spacing-tight;
+  color: $charcoal;
+
+  @include mobile {
+    font-size: $font-size-xl;
+  }
+}
+
+h3 {
+  font-family: $font-display;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-snug;
+  color: $charcoal;
+
+  @include mobile {
+    font-size: $font-size-lg;
+  }
+}
+
+h4 {
+  font-family: $font-body;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-snug;
+  color: $charcoal;
+}
+
+h5 {
+  font-family: $font-body;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-snug;
+  color: $charcoal;
+}
+
+h6 {
+  font-family: $font-body;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-normal;
+  color: $charcoal;
+}
+
+// -----------------------------------------------------------------------------
+// Body Text
+// -----------------------------------------------------------------------------
+
+p {
+  font-family: $font-body;
+  font-size: $font-size-base;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-relaxed;
+  color: $gray-dark;
+  margin-bottom: $spacing-4;
+}
+
+small,
+.text-small {
+  font-size: $font-size-sm;
+}
+
+strong,
+b {
+  font-weight: $font-weight-semibold;
+}
+
+em,
+i {
+  font-style: italic;
+}
+
+// -----------------------------------------------------------------------------
+// Display / Hero Typography
+// -----------------------------------------------------------------------------
+
+.display-1 {
+  font-family: $font-display;
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  letter-spacing: $letter-spacing-tight;
+
+  @include mobile {
+    font-size: $font-size-3xl;
+  }
+}
+
+.display-2 {
+  font-family: $font-display;
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  letter-spacing: $letter-spacing-tight;
+
+  @include mobile {
+    font-size: $font-size-2xl;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Utility Text Classes
+// -----------------------------------------------------------------------------
+
+// Size utilities
+.text-xs    { font-size: $font-size-xs; }
+.text-sm    { font-size: $font-size-sm; }
+.text-base  { font-size: $font-size-base; }
+.text-md    { font-size: $font-size-md; }
+.text-lg    { font-size: $font-size-lg; }
+.text-xl    { font-size: $font-size-xl; }
+.text-2xl   { font-size: $font-size-2xl; }
+
+// Weight utilities
+.font-regular   { font-weight: $font-weight-regular; }
+.font-medium    { font-weight: $font-weight-medium; }
+.font-semibold  { font-weight: $font-weight-semibold; }
+.font-bold      { font-weight: $font-weight-bold; }
+
+// Family utilities
+.font-display   { font-family: $font-display; }
+.font-body      { font-family: $font-body; }
+
+// Color utilities
+.text-gold      { color: $gold; }
+.text-charcoal  { color: $charcoal; }
+.text-muted     { color: $gray-light; }
+.text-gray      { color: $gray-medium; }
+.text-white     { color: $white; }
+.text-success   { color: $color-success; }
+.text-danger    { color: $color-danger; }
+.text-warning   { color: $color-warning; }
+.text-info      { color: $color-info; }
+
+// Alignment utilities
+.text-left    { text-align: left; }
+.text-center  { text-align: center; }
+.text-right   { text-align: right; }
+
+// Transform utilities
+.text-upper   { text-transform: uppercase; }
+.text-lower   { text-transform: lowercase; }
+.text-capital { text-transform: capitalize; }
+
+// Truncation utilities
+.truncate-1 { @include truncate(1); }
+.truncate-2 { @include truncate(2); }
+.truncate-3 { @include truncate(3); }
+
+// Decoration utilities
+.underline    { text-decoration: underline; }
+.no-underline { text-decoration: none; }
+
+// Section label (small caps above headings)
+.section-label {
+  font-family: $font-body;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: $letter-spacing-wider;
+  text-transform: uppercase;
+  color: $gold;
+}
+
+// Lead paragraph
+.lead {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-relaxed;
+  color: $gray-medium;
+}
+
+// Caption / footnote
+.caption {
+  font-size: $font-size-xs;
+  color: $gray-light;
+  line-height: $line-height-normal;
+}
+
+// Page title (used in page headers inside the admin)
+.page-title {
+  font-family: $font-display;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $charcoal;
+  line-height: $line-height-tight;
+
+  @include mobile {
+    font-size: $font-size-xl;
+  }
+}
+
+// Card title
+.card-title {
+  font-family: $font-display;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $charcoal;
+}
+
+// Stat number (large number in stats cards)
+.stat-number {
+  font-family: $font-display;
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: $charcoal;
+  line-height: 1;
+
+  @include mobile {
+    font-size: $font-size-2xl;
+  }
+}
+
+// Gold accent text
+.text-gold-accent {
+  color: $gold;
+  font-style: italic;
+}

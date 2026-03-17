@@ -1,0 +1,43 @@
+// =============================================================================
+// MAIN.SCSS — Sala Certa "Obsidian & Gold" Design System
+// Entry point: imports all partials in correct order
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// 1. Foundation (variables and mixins FIRST — no dependencies)
+// -----------------------------------------------------------------------------
+@import 'variables';
+@import 'mixins';
+
+// -----------------------------------------------------------------------------
+// 2. Base / Reset
+// -----------------------------------------------------------------------------
+@import 'reset';
+@import 'typography';
+
+// -----------------------------------------------------------------------------
+// 3. Components
+// -----------------------------------------------------------------------------
+@import 'buttons';
+@import 'cards';
+@import 'forms';
+@import 'tables';
+@import 'sidebar';
+@import 'topbar';
+@import 'alerts';
+@import 'badges';
+@import 'animations';
+@import 'utilities';
+@import 'calendar';
+@import 'charts';
+@import 'notifications';
+@import 'empty-states';
+
+// -----------------------------------------------------------------------------
+// 4. Page-specific styles
+// -----------------------------------------------------------------------------
+@import 'pages/landing';
+@import 'pages/login';
+@import 'pages/dashboard';
+@import 'pages/reports';
+@import 'pages/profile';

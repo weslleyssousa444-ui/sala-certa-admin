@@ -1,0 +1,363 @@
+// =============================================================================
+// DASHBOARD — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// .dashboard — Dashboard Root
+// -----------------------------------------------------------------------------
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+}
+
+// -----------------------------------------------------------------------------
+// .dashboard-greeting — Welcome Banner
+// -----------------------------------------------------------------------------
+
+.dashboard-greeting {
+  @include card-base;
+  padding: $spacing-6 $spacing-8;
+  background: linear-gradient(135deg, $charcoal 0%, $charcoal-secondary 100%);
+  color: $white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-6;
+  overflow: hidden;
+  position: relative;
+
+  // Decorative gold circle
+  &::after {
+    content: '';
+    position: absolute;
+    right: -60px;
+    top: -60px;
+    width: 200px;
+    height: 200px;
+    border-radius: $radius-full;
+    background: radial-gradient(circle, rgba($gold, 0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .greeting-text {
+    position: relative;
+    z-index: 1;
+
+    .greeting-label {
+      font-size: $font-size-xs;
+      font-weight: $font-weight-semibold;
+      text-transform: uppercase;
+      letter-spacing: $letter-spacing-wider;
+      color: $gold;
+      margin-bottom: $spacing-2;
+    }
+
+    h2 {
+      font-family: $font-display;
+      font-size: $font-size-2xl;
+      font-weight: $font-weight-bold;
+      color: $white;
+      margin-bottom: $spacing-2;
+      line-height: $line-height-tight;
+    }
+
+    p {
+      font-size: $font-size-sm;
+      color: rgba($white, 0.65);
+      margin: 0;
+    }
+  }
+
+  .greeting-action {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: $spacing-5 $spacing-5;
+
+    .greeting-action {
+      width: 100%;
+
+      .btn-gold {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .stats-row — Already in _cards.scss, but dashboard overrides
+// -----------------------------------------------------------------------------
+
+// Quick-action buttons row
+.dashboard-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  flex-wrap: wrap;
+
+  .quick-action-btn {
+    @include card-base;
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+    padding: $spacing-4 $spacing-5;
+    cursor: pointer;
+    text-decoration: none;
+    transition: $transition-base;
+    flex: 1;
+    min-width: 180px;
+
+    &:hover {
+      box-shadow: $shadow-md;
+      transform: translateY(-2px);
+      border-color: rgba($gold, 0.3);
+      text-decoration: none;
+    }
+
+    .qa-icon {
+      @include icon-circle(40px, rgba($gold, 0.1), $gold);
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .qa-label {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      color: $charcoal;
+    }
+
+    .qa-sub {
+      font-size: $font-size-xs;
+      color: $gray-light;
+    }
+  }
+
+  @include mobile {
+    .quick-action-btn {
+      min-width: calc(50% - #{$spacing-3 / 2});
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .charts-row — 2-column Charts (in _charts.scss)
+// Already defined, just contextual spacing
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+// .timeline — Activity Timeline
+// -----------------------------------------------------------------------------
+
+.timeline {
+  position: relative;
+  padding-left: $spacing-8;
+
+  // Gold vertical line
+  &::before {
+    content: '';
+    position: absolute;
+    left: $spacing-4;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(
+      180deg,
+      $gold 0%,
+      rgba($gold, 0.3) 70%,
+      transparent 100%
+    );
+    transform: translateX(-50%);
+  }
+
+  @include mobile {
+    padding-left: $spacing-6;
+  }
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: $spacing-5;
+  display: flex;
+  gap: $spacing-4;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  // Gold dot on timeline
+  .timeline-dot {
+    position: absolute;
+    left: calc(-#{$spacing-8} + #{$spacing-4} - 6px);
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: $radius-full;
+    background-color: $gold;
+    border: 2px solid $white;
+    box-shadow: 0 0 0 2px rgba($gold, 0.3);
+    flex-shrink: 0;
+
+    @include mobile {
+      left: calc(-#{$spacing-6} + #{$spacing-4} - 6px);
+    }
+
+    &.dot-blue     { background-color: $status-reservado; box-shadow: 0 0 0 2px rgba($status-reservado, 0.3); }
+    &.dot-gray     { background-color: $gray-medium; box-shadow: 0 0 0 2px rgba($gray-medium, 0.3); }
+    &.dot-red      { background-color: $color-danger; box-shadow: 0 0 0 2px rgba($color-danger, 0.3); }
+    &.dot-green    { background-color: $color-success; box-shadow: 0 0 0 2px rgba($color-success, 0.3); }
+  }
+
+  .timeline-content {
+    flex: 1;
+    min-width: 0;
+
+    .timeline-header {
+      @include flex-between;
+      margin-bottom: $spacing-1;
+      gap: $spacing-3;
+
+      @include mobile {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+      }
+    }
+
+    .timeline-title {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      color: $charcoal;
+    }
+
+    .timeline-time {
+      font-size: $font-size-xs;
+      color: $gray-light;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .timeline-body {
+      font-size: $font-size-sm;
+      color: $gray-medium;
+      line-height: $line-height-normal;
+    }
+
+    .timeline-meta {
+      display: flex;
+      align-items: center;
+      gap: $spacing-3;
+      margin-top: $spacing-2;
+      flex-wrap: wrap;
+
+      .timeline-meta-item {
+        display: flex;
+        align-items: center;
+        gap: $spacing-1;
+        font-size: $font-size-xs;
+        color: $gray-light;
+
+        i {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .dashboard-recent-table — Recent Reservations mini-table
+// -----------------------------------------------------------------------------
+
+.dashboard-section-header {
+  @include flex-between;
+  margin-bottom: $spacing-4;
+
+  .section-title {
+    font-family: $font-display;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $charcoal;
+  }
+
+  .section-link {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $gold;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: $spacing-1;
+
+    &:hover {
+      color: $gold-hover;
+      text-decoration: none;
+    }
+
+    i {
+      font-size: 14px;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .dashboard-pending-card — Awaiting approval card
+// -----------------------------------------------------------------------------
+
+.dashboard-pending-card {
+  @include card-base;
+  padding: $spacing-5;
+  @include card-hover;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: $spacing-4;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  .pending-icon {
+    @include icon-circle(44px, rgba($color-warning, 0.12), $color-warning);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .pending-info {
+    flex: 1;
+    min-width: 0;
+
+    .pending-count {
+      font-family: $font-display;
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      color: $charcoal;
+      line-height: 1;
+    }
+
+    .pending-label {
+      font-size: $font-size-sm;
+      color: $gray-medium;
+    }
+  }
+
+  .pending-arrow {
+    color: $gray-border;
+    font-size: 18px;
+    flex-shrink: 0;
+    transition: color $transition-fast, transform $transition-fast;
+  }
+
+  &:hover .pending-arrow {
+    color: $gold;
+    transform: translateX(4px);
+  }
+}

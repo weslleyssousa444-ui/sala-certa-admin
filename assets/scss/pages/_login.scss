@@ -1,0 +1,378 @@
+// =============================================================================
+// LOGIN PAGE — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// .login-page — Full-screen Split Layout
+// -----------------------------------------------------------------------------
+
+.login-page {
+  display: flex;
+  min-height: 100vh;
+  background-color: $off-white;
+  overflow: hidden;
+}
+
+// -----------------------------------------------------------------------------
+// .login-visual — Left visual/brand half (60%)
+// -----------------------------------------------------------------------------
+
+.login-visual {
+  position: relative;
+  flex: 0 0 60%;
+  max-width: 60%;
+  overflow: hidden;
+  background-color: $charcoal-secondary;
+
+  @include tablet-down {
+    display: none;
+  }
+
+  // Background image
+  .visual-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  // Dark overlay
+  .visual-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba($charcoal, 0.92) 0%,
+      rgba($charcoal-secondary, 0.78) 60%,
+      rgba($charcoal, 0.88) 100%
+    );
+    z-index: 1;
+  }
+
+  // Content over image
+  .visual-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: $spacing-10;
+
+    .visual-logo {
+      font-family: $font-display;
+      font-size: $font-size-2xl;
+      font-weight: $font-weight-bold;
+      color: $gold;
+      text-decoration: none;
+      margin-bottom: auto;
+    }
+
+    .visual-headline {
+      margin-bottom: $spacing-8;
+
+      h1 {
+        font-family: $font-display;
+        font-size: $font-size-3xl;
+        font-weight: $font-weight-bold;
+        color: $white;
+        line-height: $line-height-tight;
+        letter-spacing: $letter-spacing-tight;
+        margin-bottom: $spacing-4;
+
+        span {
+          color: $gold;
+          font-style: italic;
+        }
+      }
+
+      p {
+        font-size: $font-size-base;
+        color: rgba($white, 0.7);
+        line-height: $line-height-relaxed;
+        max-width: 380px;
+        margin: 0;
+      }
+    }
+
+    .visual-features {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-3;
+      margin-bottom: $spacing-10;
+
+      .visual-feature {
+        display: flex;
+        align-items: center;
+        gap: $spacing-3;
+
+        .feature-icon {
+          @include icon-circle(34px, rgba($gold, 0.15), $gold);
+          font-size: 14px;
+          flex-shrink: 0;
+        }
+
+        .feature-text {
+          font-size: $font-size-sm;
+          color: rgba($white, 0.75);
+          font-weight: $font-weight-medium;
+        }
+      }
+    }
+
+    .visual-footer {
+      font-size: $font-size-xs;
+      color: rgba($white, 0.3);
+    }
+  }
+
+  // Decorative gold accent line
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      $gold 30%,
+      $gold 70%,
+      transparent 100%
+    );
+    z-index: 3;
+    opacity: 0.5;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .login-form-side — Right form half (40%)
+// -----------------------------------------------------------------------------
+
+.login-form-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-10 $spacing-8;
+  background-color: $off-white;
+  overflow-y: auto;
+
+  @include mobile {
+    padding: $spacing-8 $spacing-5;
+    justify-content: flex-start;
+    padding-top: $spacing-12;
+  }
+
+  // Mobile logo (hidden on desktop, shown on mobile)
+  .mobile-logo {
+    display: none;
+    font-family: $font-display;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $gold;
+    text-align: center;
+    margin-bottom: $spacing-8;
+    text-decoration: none;
+
+    @include tablet-down {
+      display: block;
+    }
+  }
+
+  // Form container
+  .login-form-container {
+    width: 100%;
+    max-width: 400px;
+
+    .login-form-header {
+      text-align: center;
+      margin-bottom: $spacing-8;
+
+      h2 {
+        font-family: $font-display;
+        font-size: $font-size-2xl;
+        font-weight: $font-weight-bold;
+        color: $charcoal;
+        margin-bottom: $spacing-2;
+      }
+
+      p {
+        font-size: $font-size-sm;
+        color: $gray-medium;
+        margin: 0;
+      }
+    }
+  }
+
+  // Login form card
+  .login-card {
+    @include card-base;
+    padding: $spacing-8;
+    width: 100%;
+
+    @include mobile {
+      padding: $spacing-6;
+    }
+  }
+
+  // Form elements
+  .login-form {
+
+    .form-group {
+      margin-bottom: $spacing-5;
+    }
+
+    .form-label {
+      display: block;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      color: $charcoal;
+      margin-bottom: $spacing-2;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: $spacing-3 $spacing-4;
+      font-family: $font-body;
+      font-size: $font-size-base;
+      color: $charcoal;
+      background-color: $white;
+      border: 1.5px solid $gray-border;
+      border-radius: $radius-md;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $gold;
+        box-shadow: 0 0 0 3px rgba($gold, 0.15);
+      }
+
+      &::placeholder {
+        color: $gray-light;
+      }
+    }
+
+    // Password field with toggle
+    .password-field {
+      position: relative;
+
+      .form-control {
+        padding-right: $spacing-10;
+      }
+
+      .password-toggle {
+        position: absolute;
+        right: $spacing-4;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $gray-light;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        transition: color $transition-fast;
+
+        &:hover {
+          color: $gold;
+        }
+      }
+    }
+
+    .form-extras {
+      @include flex-between;
+      margin-bottom: $spacing-6;
+
+      .remember-me {
+        display: flex;
+        align-items: center;
+        gap: $spacing-2;
+        font-size: $font-size-sm;
+        color: $gray-medium;
+        cursor: pointer;
+
+        input[type='checkbox'] {
+          width: 16px;
+          height: 16px;
+          accent-color: $gold;
+          cursor: pointer;
+        }
+      }
+
+      .forgot-link {
+        font-size: $font-size-sm;
+        color: $gold;
+        text-decoration: none;
+        font-weight: $font-weight-medium;
+
+        &:hover {
+          color: $gold-hover;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .login-submit {
+      width: 100%;
+      padding: $spacing-4;
+      font-size: $font-size-base;
+      font-weight: $font-weight-semibold;
+      letter-spacing: $letter-spacing-wide;
+    }
+  }
+
+  .login-footer {
+    text-align: center;
+    margin-top: $spacing-6;
+    font-size: $font-size-sm;
+    color: $gray-medium;
+
+    a {
+      color: $gold;
+      font-weight: $font-weight-semibold;
+      text-decoration: none;
+
+      &:hover {
+        color: $gold-hover;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // Alert inside login form
+  .login-alert {
+    margin-bottom: $spacing-5;
+    animation: slideDown 0.3s ease;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Password Reset Page (reuses login layout)
+// -----------------------------------------------------------------------------
+
+.reset-page {
+  @extend .login-page;
+
+  .login-visual {
+    .visual-headline h1 {
+      font-size: $font-size-2xl;
+    }
+  }
+
+  .login-form-container {
+    .login-form-header {
+      h2 {
+        font-size: $font-size-xl;
+      }
+    }
+  }
+}

@@ -1,0 +1,450 @@
+// =============================================================================
+// FORMS — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// .sc-form — Styled Form Container
+// -----------------------------------------------------------------------------
+
+.sc-form {
+
+  // Form group (label + input wrapper)
+  .form-group {
+    margin-bottom: $spacing-5;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // Labels
+  label,
+  .form-label {
+    display: block;
+    font-family: $font-body;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $charcoal;
+    margin-bottom: $spacing-2;
+    letter-spacing: $letter-spacing-wide;
+
+    .required {
+      color: $color-danger;
+      margin-left: 2px;
+    }
+  }
+
+  // Inputs and Selects
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='search'],
+  input[type='tel'],
+  input[type='url'],
+  input[type='number'],
+  input[type='date'],
+  input[type='time'],
+  input[type='datetime-local'],
+  textarea,
+  select,
+  .form-control {
+    display: block;
+    width: 100%;
+    padding: $spacing-3 $spacing-4;
+    font-family: $font-body;
+    font-size: $font-size-base;
+    font-weight: $font-weight-regular;
+    color: $charcoal;
+    background-color: $white;
+    border: 1.5px solid $gray-border;
+    border-radius: $radius-md;
+    line-height: $line-height-normal;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    appearance: none;
+    -webkit-appearance: none;
+
+    &::placeholder {
+      color: $gray-light;
+      font-weight: $font-weight-regular;
+    }
+
+    &:hover {
+      border-color: darken($gray-border, 15%);
+    }
+
+    &:focus,
+    &:focus-visible {
+      outline: none;
+      border-color: $gold;
+      box-shadow: 0 0 0 3px rgba($gold, 0.15), 0 1px 3px rgba(0, 0, 0, 0.06);
+      background-color: $white;
+    }
+
+    &:disabled,
+    &[readonly] {
+      background-color: $gray-bg;
+      border-color: $gray-border;
+      color: $gray-medium;
+      cursor: not-allowed;
+      opacity: 0.75;
+    }
+
+    &.is-invalid,
+    &.error {
+      border-color: $color-danger;
+      box-shadow: 0 0 0 3px rgba($color-danger, 0.12);
+    }
+
+    &.is-valid,
+    &.success {
+      border-color: $color-success;
+      box-shadow: 0 0 0 3px rgba($color-success, 0.12);
+    }
+  }
+
+  // Textarea specific
+  textarea,
+  textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  // Select arrow
+  select,
+  select.form-control {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a0a0b0' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right $spacing-4 center;
+    padding-right: $spacing-10;
+    cursor: pointer;
+  }
+
+  // Validation messages
+  .form-error,
+  .invalid-feedback {
+    display: block;
+    margin-top: $spacing-1;
+    font-size: $font-size-xs;
+    color: $color-danger;
+    font-weight: $font-weight-medium;
+  }
+
+  .form-hint,
+  .form-text {
+    display: block;
+    margin-top: $spacing-1;
+    font-size: $font-size-xs;
+    color: $gray-light;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .input-icon-group — Input with leading/trailing icon
+// -----------------------------------------------------------------------------
+
+.input-icon-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input,
+  .form-control {
+    width: 100%;
+  }
+
+  .input-icon-left {
+    position: absolute;
+    left: $spacing-4;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $gray-light;
+    pointer-events: none;
+    font-size: 16px;
+    z-index: 1;
+
+    i {
+      display: block;
+      line-height: 1;
+    }
+  }
+
+  .input-icon-right {
+    position: absolute;
+    right: $spacing-4;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $gray-light;
+    font-size: 16px;
+    z-index: 1;
+    cursor: pointer;
+    transition: color $transition-fast;
+
+    i {
+      display: block;
+      line-height: 1;
+    }
+
+    &:hover {
+      color: $gold;
+    }
+  }
+
+  &.has-icon-left {
+    input,
+    .form-control {
+      padding-left: $spacing-10;
+    }
+  }
+
+  &.has-icon-right {
+    input,
+    .form-control {
+      padding-right: $spacing-10;
+    }
+  }
+
+  // Gold icon when focused
+  &:focus-within {
+    .input-icon-left,
+    .input-icon-right {
+      color: $gold;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .form-row — Two-column Grid Layout
+// -----------------------------------------------------------------------------
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-5;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+
+  &.form-row-3 {
+    grid-template-columns: repeat(3, 1fr);
+
+    @include tablet-down {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include mobile {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// Full-width override within form-row
+.form-col-full {
+  grid-column: 1 / -1;
+}
+
+// -----------------------------------------------------------------------------
+// .form-actions — Form Submission Buttons Row
+// -----------------------------------------------------------------------------
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: $spacing-3;
+  padding-top: $spacing-5;
+  margin-top: $spacing-5;
+  border-top: 1px solid $gray-border;
+
+  @include mobile {
+    flex-direction: column-reverse;
+    align-items: stretch;
+
+    .btn,
+    .btn-gold,
+    .btn-gray,
+    .btn-charcoal,
+    .btn-gold-outline {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .time-slot-grid — Room Time Slot Picker
+// -----------------------------------------------------------------------------
+
+.time-slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: $spacing-2;
+
+  @include mobile {
+    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+  }
+}
+
+.time-slot {
+  padding: $spacing-2 $spacing-3;
+  border: 1.5px solid $gray-border;
+  border-radius: $radius-md;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  text-align: center;
+  cursor: pointer;
+  transition: $transition-fast;
+  background-color: $white;
+  color: $gray-dark;
+  user-select: none;
+
+  &:hover {
+    border-color: $gold;
+    color: $gold;
+  }
+
+  // Available slot (explicit green)
+  &.available {
+    background-color: rgba($color-success, 0.06);
+    border-color: rgba($color-success, 0.3);
+    color: $color-success;
+
+    &:hover {
+      background-color: rgba($color-success, 0.15);
+      border-color: $color-success;
+    }
+  }
+
+  // Occupied slot — not selectable
+  &.occupied {
+    background-color: $gray-bg;
+    border-color: $gray-border;
+    color: $gray-light;
+    cursor: not-allowed;
+    opacity: 0.6;
+
+    &:hover {
+      border-color: $gray-border;
+      color: $gray-light;
+    }
+  }
+
+  // Selected slot — gold/green filled
+  &.selected {
+    background-color: $color-success;
+    border-color: $color-success;
+    color: $white;
+    box-shadow: 0 2px 8px rgba($color-success, 0.3);
+
+    &:hover {
+      background-color: darken($color-success, 8%);
+      border-color: darken($color-success, 8%);
+      color: $white;
+    }
+  }
+
+  // Past / disabled
+  &.disabled,
+  &:disabled {
+    background-color: $gray-bg;
+    border-color: $gray-border;
+    color: $gray-light;
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+// Time slot legend
+.time-slot-legend {
+  display: flex;
+  align-items: center;
+  gap: $spacing-5;
+  margin-bottom: $spacing-4;
+  flex-wrap: wrap;
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    font-size: $font-size-xs;
+    color: $gray-medium;
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: $radius-sm;
+      flex-shrink: 0;
+
+      &.available  { background: rgba($color-success, 0.5); border: 1.5px solid $color-success; }
+      &.occupied   { background: $gray-bg; border: 1.5px solid $gray-border; }
+      &.selected   { background: $color-success; border: 1.5px solid $color-success; }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Checkbox & Radio
+// -----------------------------------------------------------------------------
+
+.sc-form {
+
+  .form-check {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+    cursor: pointer;
+    margin-bottom: $spacing-3;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    input[type='checkbox'],
+    input[type='radio'] {
+      width: 18px;
+      height: 18px;
+      border: 2px solid $gray-border;
+      border-radius: $radius-sm;
+      background: $white;
+      cursor: pointer;
+      flex-shrink: 0;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: $transition-fast;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:checked {
+        background-color: $gold;
+        border-color: $gold;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='10' viewBox='0 0 12 10'%3E%3Cpath d='M1 5l3.5 4L11 1' stroke='%231a1a2e' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      &:focus {
+        @include focus-ring;
+      }
+    }
+
+    input[type='radio'] {
+      border-radius: $radius-full;
+
+      &:checked {
+        background-image: none;
+        position: relative;
+        box-shadow: inset 0 0 0 4px $gold;
+        background-color: $white;
+        border-color: $gold;
+      }
+    }
+
+    .form-check-label {
+      font-size: $font-size-sm;
+      color: $charcoal;
+      cursor: pointer;
+    }
+  }
+}

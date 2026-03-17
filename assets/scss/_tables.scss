@@ -1,0 +1,478 @@
+// =============================================================================
+// TABLES — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// .sc-filters — Search & Filter Bar
+// -----------------------------------------------------------------------------
+
+.sc-filters {
+  @include card-base;
+  padding: $spacing-4 $spacing-5;
+  margin-bottom: $spacing-5;
+
+  .sc-filters-inner {
+    display: flex;
+    align-items: center;
+    gap: $spacing-4;
+    flex-wrap: wrap;
+
+    @include mobile {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  // Search input with gold icon
+  .sc-search {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+
+    @include mobile {
+      min-width: unset;
+      width: 100%;
+    }
+
+    input[type='search'],
+    input[type='text'] {
+      width: 100%;
+      padding: $spacing-3 $spacing-4 $spacing-3 $spacing-10;
+      font-family: $font-body;
+      font-size: $font-size-sm;
+      color: $charcoal;
+      background-color: $off-white;
+      border: 1.5px solid $gray-border;
+      border-radius: $radius-md;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      appearance: none;
+
+      &::placeholder {
+        color: $gray-light;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $gold;
+        box-shadow: 0 0 0 3px rgba($gold, 0.12);
+        background-color: $white;
+      }
+    }
+
+    .sc-search-icon {
+      position: absolute;
+      left: $spacing-3;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $gold;
+      font-size: 16px;
+      pointer-events: none;
+    }
+  }
+
+  // Filter selects
+  .sc-filter-select {
+    min-width: 160px;
+
+    select {
+      width: 100%;
+      padding: $spacing-3 $spacing-8 $spacing-3 $spacing-4;
+      font-family: $font-body;
+      font-size: $font-size-sm;
+      color: $charcoal;
+      background-color: $off-white;
+      border: 1.5px solid $gray-border;
+      border-radius: $radius-md;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a0a0b0' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right $spacing-3 center;
+      transition: border-color 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $gold;
+        box-shadow: 0 0 0 3px rgba($gold, 0.12);
+      }
+    }
+
+    @include mobile {
+      min-width: unset;
+      width: 100%;
+    }
+  }
+
+  .sc-filter-label {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: $gray-medium;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-wide;
+    white-space: nowrap;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .sc-table-wrapper — Scroll Container
+// -----------------------------------------------------------------------------
+
+.sc-table-wrapper {
+  @include card-base;
+  overflow: hidden;
+
+  .sc-table-top {
+    padding: $spacing-4 $spacing-5;
+    border-bottom: 1px solid $gray-border;
+    @include flex-between;
+
+    @include mobile {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-3;
+    }
+  }
+
+  .sc-table-scroll {
+    overflow-x: auto;
+    @include custom-scrollbar;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .sc-table — Main Table
+// -----------------------------------------------------------------------------
+
+.sc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: $font-body;
+
+  // Head
+  thead {
+    th {
+      background-color: $charcoal;
+      color: $gray-light;
+      font-family: $font-body;
+      font-size: $font-size-xs;
+      font-weight: $font-weight-semibold;
+      text-transform: uppercase;
+      letter-spacing: $letter-spacing-wider;
+      padding: $spacing-4 $spacing-5;
+      text-align: left;
+      white-space: nowrap;
+      border: none;
+
+      &:first-child {
+        border-radius: 0;
+      }
+
+      &:last-child {
+        border-radius: 0;
+      }
+
+      // Sortable column
+      &.sortable {
+        cursor: pointer;
+        user-select: none;
+
+        &:hover {
+          color: $gold;
+        }
+
+        .sort-icon {
+          margin-left: $spacing-2;
+          opacity: 0.5;
+        }
+
+        &.sort-asc,
+        &.sort-desc {
+          color: $gold;
+
+          .sort-icon {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+
+  // Body
+  tbody {
+    tr {
+      border-bottom: 1px solid $gray-border;
+      transition: background-color $transition-fast;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      // Alternating rows
+      &:nth-child(even) {
+        background-color: rgba($off-white, 0.6);
+      }
+
+      &:nth-child(odd) {
+        background-color: $white;
+      }
+
+      // Gold hover
+      &:hover {
+        background-color: rgba($gold, 0.05);
+        cursor: pointer;
+      }
+
+      &.selected {
+        background-color: rgba($gold, 0.08);
+        border-left: 3px solid $gold;
+      }
+    }
+
+    td {
+      padding: $spacing-4 $spacing-5;
+      font-size: $font-size-sm;
+      color: $charcoal;
+      vertical-align: middle;
+      border: none;
+    }
+  }
+
+  // No-hover variant
+  &.sc-table-static tbody tr:hover {
+    background-color: inherit;
+    cursor: default;
+  }
+
+  // Compact variant
+  &.sc-table-compact {
+    thead th,
+    tbody td {
+      padding: $spacing-3 $spacing-4;
+    }
+  }
+
+  // Column helpers
+  .col-actions {
+    text-align: right;
+    width: 120px;
+    white-space: nowrap;
+  }
+
+  .col-narrow { width: 80px; }
+  .col-medium { width: 140px; }
+
+  // Responsive hide/show
+  .hide-mobile {
+    @include mobile {
+      display: none;
+    }
+  }
+
+  .hide-tablet {
+    @include tablet-down {
+      display: none;
+    }
+  }
+
+  .show-mobile {
+    display: none;
+
+    @include mobile {
+      display: table-cell;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// DataTables Overrides
+// -----------------------------------------------------------------------------
+
+.dataTables_wrapper {
+
+  // Length select and info
+  .dataTables_length,
+  .dataTables_info {
+    font-size: $font-size-sm;
+    color: $gray-medium;
+    padding: $spacing-3 $spacing-5;
+
+    select {
+      padding: $spacing-2 $spacing-6 $spacing-2 $spacing-3;
+      border: 1.5px solid $gray-border;
+      border-radius: $radius-md;
+      font-family: $font-body;
+      font-size: $font-size-sm;
+      color: $charcoal;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a0a0b0' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right $spacing-2 center;
+      background-color: $white;
+      cursor: pointer;
+
+      &:focus {
+        outline: none;
+        border-color: $gold;
+        box-shadow: 0 0 0 3px rgba($gold, 0.12);
+      }
+    }
+  }
+
+  // Search
+  .dataTables_filter {
+    padding: $spacing-3 $spacing-5;
+
+    input {
+      margin-left: $spacing-3;
+      padding: $spacing-2 $spacing-4;
+      border: 1.5px solid $gray-border;
+      border-radius: $radius-md;
+      font-family: $font-body;
+      font-size: $font-size-sm;
+      color: $charcoal;
+
+      &:focus {
+        outline: none;
+        border-color: $gold;
+        box-shadow: 0 0 0 3px rgba($gold, 0.12);
+      }
+    }
+  }
+
+  // Pagination
+  .dataTables_paginate {
+    padding: $spacing-4 $spacing-5;
+
+    .paginate_button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: $radius-full;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      cursor: pointer;
+      transition: $transition-fast;
+      color: $gray-medium;
+      background: transparent;
+      border: none;
+      margin: 0 2px;
+
+      &:hover {
+        background-color: rgba($gold, 0.1);
+        color: $gold;
+      }
+
+      &.current {
+        background-color: $gold;
+        color: $charcoal;
+        font-weight: $font-weight-semibold;
+        box-shadow: $shadow-gold;
+
+        &:hover {
+          background-color: $gold-hover;
+          color: $charcoal;
+        }
+      }
+
+      &.disabled {
+        color: $gray-border;
+        cursor: not-allowed;
+
+        &:hover {
+          background-color: transparent;
+          color: $gray-border;
+        }
+      }
+
+      &.previous,
+      &.next {
+        font-size: $font-size-xs;
+        width: auto;
+        padding: 0 $spacing-3;
+        border-radius: $radius-md;
+        background-color: $gray-bg;
+        color: $gray-medium;
+        border: 1px solid $gray-border;
+
+        &:hover {
+          background-color: $gold;
+          color: $charcoal;
+          border-color: $gold;
+        }
+      }
+    }
+  }
+
+  // Top/bottom row
+  .dataTables_wrapper > div.row {
+    margin: 0;
+    align-items: center;
+  }
+}
+
+// DataTables processing overlay
+.dataTables_processing {
+  background: rgba($white, 0.85);
+  border: 1px solid $gray-border;
+  border-radius: $radius-md;
+  padding: $spacing-4 $spacing-8;
+  font-size: $font-size-sm;
+  color: $gray-medium;
+  box-shadow: $shadow-md;
+}
+
+// Empty table state
+table.dataTable tbody td.dataTables_empty {
+  text-align: center;
+  padding: $spacing-16;
+  color: $gray-light;
+  font-style: italic;
+}
+
+// -----------------------------------------------------------------------------
+// Table Cell Helpers
+// -----------------------------------------------------------------------------
+
+.td-avatar {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+
+  .td-avatar-img {
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-full;
+    object-fit: cover;
+    flex-shrink: 0;
+    background-color: $gray-bg;
+  }
+
+  .td-avatar-initials {
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-full;
+    background-color: rgba($gold, 0.15);
+    color: $gold;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    text-transform: uppercase;
+  }
+
+  .td-avatar-name {
+    font-weight: $font-weight-medium;
+    color: $charcoal;
+  }
+
+  .td-avatar-sub {
+    font-size: $font-size-xs;
+    color: $gray-light;
+  }
+}

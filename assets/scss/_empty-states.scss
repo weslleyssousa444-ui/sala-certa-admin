@@ -1,0 +1,221 @@
+// =============================================================================
+// EMPTY STATES — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// .empty-state — Centered Empty / No-Data State
+// -----------------------------------------------------------------------------
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: $spacing-16 $spacing-8;
+  min-height: 300px;
+
+  // Icon container
+  .empty-state-icon {
+    @include icon-circle(72px, rgba($gold, 0.1), rgba($gold, 0.5));
+    margin-bottom: $spacing-6;
+
+    i {
+      font-size: 30px;
+    }
+
+    // Variants
+    &.empty-icon-charcoal {
+      background: rgba($charcoal, 0.06);
+      color: rgba($charcoal, 0.35);
+    }
+
+    &.empty-icon-gray {
+      background: rgba($gray-light, 0.1);
+      color: rgba($gray-light, 0.6);
+    }
+
+    &.empty-icon-success {
+      background: rgba($color-success, 0.1);
+      color: $color-success;
+    }
+
+    &.empty-icon-danger {
+      background: rgba($color-danger, 0.1);
+      color: $color-danger;
+    }
+  }
+
+  // Illustration (when using img instead of icon)
+  .empty-state-illustration {
+    width: 160px;
+    height: 160px;
+    margin-bottom: $spacing-6;
+    opacity: 0.7;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  // Title
+  .empty-state-title {
+    font-family: $font-display;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    color: $charcoal;
+    margin-bottom: $spacing-3;
+  }
+
+  // Supporting text
+  .empty-state-text {
+    font-size: $font-size-sm;
+    color: $gray-medium;
+    line-height: $line-height-relaxed;
+    max-width: 360px;
+    margin: 0 auto $spacing-6;
+  }
+
+  // Optional CTA button
+  .empty-state-action {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  // Size variants
+  &.empty-state-sm {
+    min-height: 200px;
+    padding: $spacing-10 $spacing-6;
+
+    .empty-state-icon {
+      width: 52px;
+      height: 52px;
+      margin-bottom: $spacing-4;
+
+      i {
+        font-size: 22px;
+      }
+    }
+
+    .empty-state-title {
+      font-size: $font-size-lg;
+    }
+  }
+
+  &.empty-state-lg {
+    min-height: 400px;
+    padding: $spacing-20 $spacing-8;
+
+    .empty-state-icon {
+      width: 96px;
+      height: 96px;
+      margin-bottom: $spacing-8;
+
+      i {
+        font-size: 40px;
+      }
+    }
+  }
+
+  // Inline variant (horizontal)
+  &.empty-state-inline {
+    flex-direction: row;
+    text-align: left;
+    gap: $spacing-5;
+    min-height: auto;
+    padding: $spacing-8;
+    justify-content: flex-start;
+
+    .empty-state-icon {
+      margin-bottom: 0;
+      flex-shrink: 0;
+    }
+
+    .empty-state-body {
+      flex: 1;
+    }
+
+    .empty-state-title {
+      font-size: $font-size-md;
+      margin-bottom: $spacing-2;
+    }
+
+    .empty-state-text {
+      max-width: none;
+      margin-bottom: $spacing-4;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Empty state inside table
+// -----------------------------------------------------------------------------
+
+.table-empty-state {
+  td,
+  .table-empty-cell {
+    padding: $spacing-16 $spacing-8;
+    text-align: center;
+  }
+
+  .empty-state {
+    min-height: auto;
+    padding: $spacing-8;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 404 / Error page empty state
+// -----------------------------------------------------------------------------
+
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  padding: $spacing-8;
+
+  .error-code {
+    font-family: $font-display;
+    font-size: 120px;
+    font-weight: $font-weight-bold;
+    color: rgba($charcoal, 0.08);
+    line-height: 1;
+    letter-spacing: -0.05em;
+    margin-bottom: $spacing-4;
+
+    @include mobile {
+      font-size: 80px;
+    }
+  }
+
+  .error-title {
+    font-family: $font-display;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $charcoal;
+    margin-bottom: $spacing-3;
+  }
+
+  .error-text {
+    font-size: $font-size-base;
+    color: $gray-medium;
+    max-width: 400px;
+    margin: 0 auto $spacing-8;
+    line-height: $line-height-relaxed;
+  }
+
+  .error-actions {
+    display: flex;
+    gap: $spacing-3;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

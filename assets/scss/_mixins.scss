@@ -1,0 +1,254 @@
+// =============================================================================
+// MIXINS — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Responsive Breakpoints
+// -----------------------------------------------------------------------------
+
+/// Mobile only (<= 575px)
+@mixin mobile {
+  @media (max-width: #{$bp-mobile}) {
+    @content;
+  }
+}
+
+/// Tablet and up (>= 576px)
+@mixin tablet {
+  @media (min-width: #{$bp-tablet}) {
+    @content;
+  }
+}
+
+/// Tablet and below (<= 991px)
+@mixin tablet-down {
+  @media (max-width: #{$bp-tablet-max}) {
+    @content;
+  }
+}
+
+/// Desktop and up (>= 992px)
+@mixin desktop {
+  @media (min-width: #{$bp-desktop}) {
+    @content;
+  }
+}
+
+/// Wide screens (>= 1200px)
+@mixin wide {
+  @media (min-width: #{$bp-wide}) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Flex Helpers
+// -----------------------------------------------------------------------------
+
+/// Flex row, centered vertically
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+}
+
+/// Flex row, centered both axes
+@mixin flex-center-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/// Flex row, space-between, centered vertically
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/// Flex column
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// -----------------------------------------------------------------------------
+// Gold Bar Left (active sidebar items, highlighted elements)
+// -----------------------------------------------------------------------------
+
+@mixin gold-bar-left($width: 3px, $color: $gold) {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: $width;
+    background-color: $color;
+    border-radius: 0 $radius-sm $radius-sm 0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Card Base
+// -----------------------------------------------------------------------------
+
+@mixin card-base {
+  background-color: $white;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  border: 1px solid rgba($gray-border, 0.6);
+}
+
+@mixin card-hover {
+  transition: $transition-base;
+
+  &:hover {
+    box-shadow: $shadow-md;
+    transform: translateY(-2px);
+    border-color: rgba($gold, 0.3);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Button Gold
+// -----------------------------------------------------------------------------
+
+@mixin btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-2;
+  padding: $spacing-3 $spacing-6;
+  background-color: $gold;
+  color: $charcoal;
+  font-family: $font-body;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  letter-spacing: $letter-spacing-wide;
+  text-transform: uppercase;
+  border: 2px solid $gold;
+  border-radius: $radius-md;
+  cursor: pointer;
+  text-decoration: none;
+  transition: $transition-base;
+  white-space: nowrap;
+
+  &:hover,
+  &:focus {
+    background-color: $gold-hover;
+    border-color: $gold-hover;
+    box-shadow: $shadow-gold;
+    color: $charcoal;
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  &:disabled,
+  &.disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Truncate Text
+// -----------------------------------------------------------------------------
+
+@mixin truncate($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Visually Hidden (accessibility)
+// -----------------------------------------------------------------------------
+
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// -----------------------------------------------------------------------------
+// Scrollbar Styling
+// -----------------------------------------------------------------------------
+
+@mixin custom-scrollbar($color: $gold, $track: $off-white) {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $track;
+    border-radius: $radius-full;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($color, 0.4);
+    border-radius: $radius-full;
+
+    &:hover {
+      background: rgba($color, 0.7);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Icon Circle
+// -----------------------------------------------------------------------------
+
+@mixin icon-circle($size: 40px, $bg: rgba($gold, 0.12), $color: $gold) {
+  width: $size;
+  height: $size;
+  background-color: $bg;
+  color: $color;
+  border-radius: $radius-full;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+// -----------------------------------------------------------------------------
+// Overlay
+// -----------------------------------------------------------------------------
+
+@mixin overlay($color: rgba(0, 0, 0, 0.5)) {
+  position: fixed;
+  inset: 0;
+  background-color: $color;
+  z-index: $z-overlay;
+}
+
+// -----------------------------------------------------------------------------
+// Focus Ring (accessibility)
+// -----------------------------------------------------------------------------
+
+@mixin focus-ring($color: $gold) {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba($color, 0.3);
+}

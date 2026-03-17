@@ -1,0 +1,219 @@
+// =============================================================================
+// ALERTS — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// .sc-alert — Base Alert
+// -----------------------------------------------------------------------------
+
+.sc-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-3;
+  padding: $spacing-4 $spacing-5;
+  border-radius: $radius-md;
+  border: 1px solid transparent;
+  border-left: 4px solid transparent;
+  font-size: $font-size-sm;
+  line-height: $line-height-relaxed;
+  position: relative;
+  animation: slideDown 0.3s ease forwards;
+
+  .sc-alert-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    line-height: 1;
+  }
+
+  .sc-alert-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sc-alert-title {
+    font-weight: $font-weight-semibold;
+    margin-bottom: $spacing-1;
+    font-size: $font-size-sm;
+  }
+
+  .sc-alert-text {
+    opacity: 0.9;
+    font-size: $font-size-sm;
+    line-height: $line-height-relaxed;
+    margin: 0;
+  }
+
+  // Close button
+  .sc-alert-close {
+    position: absolute;
+    top: $spacing-3;
+    right: $spacing-3;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $radius-sm;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: $transition-fast;
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 16px;
+
+    &:hover {
+      opacity: 1;
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  // Dismissible padding
+  &.sc-alert-dismissible {
+    padding-right: $spacing-10;
+  }
+
+  // Collapsing out animation
+  &.dismissing {
+    animation: alertDismiss 0.3s ease forwards;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Alert Variants
+// -----------------------------------------------------------------------------
+
+.sc-alert-success {
+  background-color: $color-success-bg;
+  border-color: $color-success-border;
+  border-left-color: $color-success;
+  color: darken($color-success, 10%);
+
+  .sc-alert-icon {
+    color: $color-success;
+  }
+}
+
+.sc-alert-danger {
+  background-color: $color-danger-bg;
+  border-color: $color-danger-border;
+  border-left-color: $color-danger;
+  color: darken($color-danger, 10%);
+
+  .sc-alert-icon {
+    color: $color-danger;
+  }
+}
+
+.sc-alert-warning {
+  background-color: $color-warning-bg;
+  border-color: $color-warning-border;
+  border-left-color: $color-warning;
+  color: darken($color-warning, 15%);
+
+  .sc-alert-icon {
+    color: $color-warning;
+  }
+}
+
+.sc-alert-info {
+  background-color: $color-info-bg;
+  border-color: $color-info-border;
+  border-left-color: $color-info;
+  color: darken($color-info, 10%);
+
+  .sc-alert-icon {
+    color: $color-info;
+  }
+}
+
+// Gold / brand alert
+.sc-alert-gold {
+  background-color: rgba($gold, 0.08);
+  border-color: rgba($gold, 0.3);
+  border-left-color: $gold;
+  color: darken($gold-dark, 10%);
+
+  .sc-alert-icon {
+    color: $gold;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Flash Message Container
+// -----------------------------------------------------------------------------
+
+.sc-flash {
+  position: fixed;
+  top: calc(#{$topbar-height} + #{$spacing-4});
+  right: $spacing-6;
+  z-index: $z-toast;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  max-width: 420px;
+  width: calc(100% - #{$spacing-8});
+
+  @include mobile {
+    top: $spacing-4;
+    right: $spacing-4;
+    left: $spacing-4;
+    width: auto;
+    max-width: none;
+  }
+
+  .sc-alert {
+    box-shadow: $shadow-lg;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Inline validation message
+// -----------------------------------------------------------------------------
+
+.sc-field-error {
+  display: flex;
+  align-items: center;
+  gap: $spacing-1;
+  margin-top: $spacing-1;
+  font-size: $font-size-xs;
+  color: $color-danger;
+  font-weight: $font-weight-medium;
+  animation: slideDown 0.2s ease forwards;
+
+  i {
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// @keyframes
+// -----------------------------------------------------------------------------
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes alertDismiss {
+  from {
+    opacity: 1;
+    max-height: 200px;
+    margin-bottom: $spacing-3;
+  }
+  to {
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}

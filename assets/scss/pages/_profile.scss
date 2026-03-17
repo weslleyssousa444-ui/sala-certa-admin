@@ -1,0 +1,480 @@
+// =============================================================================
+// PROFILE & SETTINGS PAGE — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// .profile-page — User Profile Layout
+// -----------------------------------------------------------------------------
+
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+}
+
+// -----------------------------------------------------------------------------
+// .profile-card — Main Profile Info Card
+// -----------------------------------------------------------------------------
+
+.profile-card {
+  @include card-base;
+  overflow: hidden;
+
+  // Hero banner (charcoal gradient)
+  .profile-banner {
+    height: 140px;
+    background: linear-gradient(135deg, $charcoal 0%, $charcoal-secondary 100%);
+    position: relative;
+
+    // Subtle grid pattern
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba($white, 0.04) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+  }
+
+  // Avatar overlapping banner
+  .profile-avatar-wrapper {
+    position: relative;
+    margin-top: -44px;
+    margin-left: $spacing-8;
+    display: inline-block;
+    z-index: 1;
+
+    @include mobile {
+      margin-left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+    }
+
+    .profile-avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: $radius-full;
+      border: 4px solid $white;
+      background-color: rgba($gold, 0.15);
+      color: $gold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: $font-display;
+      font-size: $font-size-2xl;
+      font-weight: $font-weight-bold;
+      text-transform: uppercase;
+      overflow: hidden;
+      box-shadow: $shadow-md;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    // Edit avatar button
+    .avatar-edit-btn {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 28px;
+      height: 28px;
+      border-radius: $radius-full;
+      background-color: $gold;
+      color: $charcoal;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      cursor: pointer;
+      border: 2px solid $white;
+      transition: $transition-fast;
+      z-index: 2;
+
+      &:hover {
+        background-color: $gold-hover;
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  // Profile meta area
+  .profile-meta {
+    padding: $spacing-4 $spacing-8 $spacing-6;
+    @include flex-between;
+    align-items: flex-start;
+
+    @include mobile {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: $spacing-4;
+      padding: $spacing-4 $spacing-5 $spacing-5;
+    }
+  }
+
+  .profile-identity {
+    .profile-name {
+      font-family: $font-display;
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      color: $charcoal;
+      margin-bottom: $spacing-1;
+    }
+
+    .profile-role {
+      font-size: $font-size-sm;
+      color: $gray-medium;
+      margin-bottom: $spacing-3;
+    }
+
+    .profile-tags {
+      display: flex;
+      align-items: center;
+      gap: $spacing-2;
+      flex-wrap: wrap;
+
+      @include mobile {
+        justify-content: center;
+      }
+    }
+  }
+
+  .profile-actions {
+    display: flex;
+    gap: $spacing-3;
+    flex-shrink: 0;
+
+    @include mobile {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  // Profile stats row
+  .profile-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid $gray-border;
+
+    @include mobile {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .profile-stat {
+      padding: $spacing-4;
+      text-align: center;
+      border-right: 1px solid $gray-border;
+
+      &:last-child {
+        border-right: none;
+      }
+
+      .stat-value {
+        font-family: $font-display;
+        font-size: $font-size-xl;
+        font-weight: $font-weight-bold;
+        color: $charcoal;
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+
+      .stat-label {
+        font-size: $font-size-xs;
+        color: $gray-medium;
+        text-transform: uppercase;
+        letter-spacing: $letter-spacing-wide;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .detail-grid — Profile Info Details
+// -----------------------------------------------------------------------------
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-5;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-item {
+    @include flex-column;
+    gap: $spacing-1;
+
+    .detail-label {
+      font-size: $font-size-xs;
+      font-weight: $font-weight-semibold;
+      text-transform: uppercase;
+      letter-spacing: $letter-spacing-wide;
+      color: $gray-light;
+    }
+
+    .detail-value {
+      font-size: $font-size-sm;
+      color: $charcoal;
+      font-weight: $font-weight-medium;
+    }
+
+    &.detail-full {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .settings-page — Settings with Tab Navigation
+// -----------------------------------------------------------------------------
+
+.settings-page {
+  display: flex;
+  gap: $spacing-6;
+  align-items: flex-start;
+
+  @include tablet-down {
+    flex-direction: column;
+  }
+}
+
+// Settings sidebar tabs
+.settings-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+
+  @include tablet-down {
+    width: 100%;
+  }
+
+  .settings-nav {
+    @include card-base;
+    padding: $spacing-3;
+    overflow: hidden;
+
+    .settings-nav-item {
+      display: flex;
+      align-items: center;
+      gap: $spacing-3;
+      padding: $spacing-3 $spacing-4;
+      border-radius: $radius-md;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $gray-medium;
+      cursor: pointer;
+      transition: $transition-fast;
+      background: transparent;
+      border: none;
+      width: 100%;
+      text-align: left;
+      text-decoration: none;
+
+      i {
+        font-size: 16px;
+        width: 18px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      &:hover {
+        background-color: $gray-bg;
+        color: $charcoal;
+      }
+
+      &.active {
+        background-color: rgba($gold, 0.1);
+        color: $gold;
+        font-weight: $font-weight-semibold;
+        @include gold-bar-left(3px, $gold);
+      }
+    }
+  }
+
+  @include tablet-down {
+    .settings-nav {
+      display: flex;
+      padding: $spacing-2;
+      gap: $spacing-1;
+      flex-wrap: wrap;
+
+      .settings-nav-item {
+        flex: 1;
+        min-width: auto;
+        justify-content: center;
+        padding: $spacing-2 $spacing-3;
+
+        span {
+          @include mobile {
+            display: none;
+          }
+        }
+
+        &.active::before {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+// Settings content area
+.settings-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-5;
+
+  .settings-section {
+    @include card-base;
+    padding: $spacing-6;
+
+    .settings-section-title {
+      font-family: $font-display;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $charcoal;
+      margin-bottom: $spacing-5;
+      padding-bottom: $spacing-4;
+      border-bottom: 1px solid $gray-border;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .toggle-row — Setting Row with Toggle Switch
+// -----------------------------------------------------------------------------
+
+.toggle-row {
+  @include flex-between;
+  padding: $spacing-4 0;
+  border-bottom: 1px solid rgba($gray-border, 0.5);
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .toggle-info {
+    flex: 1;
+    min-width: 0;
+    padding-right: $spacing-6;
+
+    .toggle-label {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      color: $charcoal;
+      margin-bottom: 2px;
+    }
+
+    .toggle-description {
+      font-size: $font-size-xs;
+      color: $gray-light;
+      line-height: $line-height-normal;
+    }
+  }
+}
+
+// .toggle-switch — Gold custom checkbox
+.toggle-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  input[type='checkbox'] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:checked + .toggle-track {
+      background-color: $gold;
+      border-color: $gold;
+
+      .toggle-thumb {
+        transform: translateX(20px);
+        background-color: $charcoal;
+      }
+    }
+
+    &:focus + .toggle-track {
+      box-shadow: 0 0 0 3px rgba($gold, 0.2);
+    }
+
+    &:disabled + .toggle-track {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .toggle-track {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    border-radius: $radius-full;
+    background-color: $gray-bg;
+    border: 2px solid $gray-border;
+    transition: $transition-base;
+    display: flex;
+    align-items: center;
+
+    .toggle-thumb {
+      position: absolute;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: $radius-full;
+      background-color: $gray-medium;
+      transition: $transition-base;
+      box-shadow: $shadow-sm;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Danger Zone Section
+// -----------------------------------------------------------------------------
+
+.settings-danger-zone {
+  @include card-base;
+  padding: $spacing-6;
+  border-color: rgba($color-danger, 0.3);
+  border-width: 1.5px;
+
+  .settings-section-title {
+    color: $color-danger;
+    border-bottom-color: rgba($color-danger, 0.2);
+  }
+
+  .danger-item {
+    @include flex-between;
+    padding: $spacing-4 0;
+    border-bottom: 1px solid rgba($color-danger, 0.1);
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .danger-info {
+      .danger-title {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-semibold;
+        color: $charcoal;
+      }
+
+      .danger-description {
+        font-size: $font-size-xs;
+        color: $gray-medium;
+        margin-top: 2px;
+      }
+    }
+  }
+}

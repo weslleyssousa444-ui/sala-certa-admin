@@ -1,0 +1,421 @@
+// =============================================================================
+// SIDEBAR — Sala Certa "Obsidian & Gold" Design System
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// .sc-sidebar — Fixed Left Navigation
+// -----------------------------------------------------------------------------
+
+.sc-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: $sidebar-width;
+  height: 100vh;
+  background-color: $charcoal;
+  display: flex;
+  flex-direction: column;
+  z-index: $z-sidebar;
+  overflow: hidden;
+  transition: transform 0.3s ease, width 0.3s ease;
+
+  @include custom-scrollbar($gold, $charcoal-light);
+
+  // Subtle gradient overlay
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(180deg, rgba($charcoal-secondary, 0.8) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  // Everything above the gradient
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .sidebar-logo — Brand Mark at Top
+// -----------------------------------------------------------------------------
+
+.sidebar-logo {
+  padding: $spacing-6 $spacing-5;
+  border-bottom: 1px solid rgba($white, 0.07);
+  flex-shrink: 0;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+      opacity: 0.9;
+    }
+  }
+
+  .sidebar-logo-icon {
+    width: 36px;
+    height: 36px;
+    background-color: $gold;
+    border-radius: $radius-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    i {
+      color: $charcoal;
+      font-size: 18px;
+    }
+  }
+
+  .sidebar-logo-text {
+    @include flex-column;
+    gap: 0;
+
+    .sidebar-logo-name {
+      font-family: $font-display;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      color: $gold;
+      line-height: 1;
+      letter-spacing: $letter-spacing-tight;
+    }
+
+    .sidebar-logo-tagline {
+      font-size: $font-size-xs;
+      color: rgba($gray-light, 0.7);
+      letter-spacing: $letter-spacing-wide;
+      margin-top: 2px;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .sidebar-nav — Navigation Links
+// -----------------------------------------------------------------------------
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: $spacing-4 0;
+  @include custom-scrollbar($gold, $charcoal-light);
+
+  // Section separator label
+  .sidebar-nav-section {
+    padding: $spacing-5 $spacing-5 $spacing-2;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    letter-spacing: $letter-spacing-wider;
+    text-transform: uppercase;
+    color: rgba($gray-light, 0.4);
+    margin-top: $spacing-2;
+  }
+
+  // Nav list
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    margin: 2px 0;
+  }
+
+  // Nav link
+  a,
+  .sidebar-nav-link {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+    padding: $spacing-3 $spacing-5;
+    color: $gray-light;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    text-decoration: none;
+    border-radius: 0;
+    transition: $transition-fast;
+    position: relative;
+    margin: 0 $spacing-3;
+    border-radius: $radius-md;
+
+    i {
+      font-size: 18px;
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+      transition: color $transition-fast;
+    }
+
+    .nav-label {
+      flex: 1;
+      transition: color $transition-fast;
+    }
+
+    .nav-badge {
+      background-color: $gold;
+      color: $charcoal;
+      font-size: $font-size-xs;
+      font-weight: $font-weight-bold;
+      padding: 2px 7px;
+      border-radius: $radius-full;
+      line-height: 1.5;
+    }
+
+    // Hover state
+    &:hover {
+      background-color: rgba($white, 0.06);
+      color: $white;
+      text-decoration: none;
+
+      i {
+        color: $gold;
+      }
+    }
+
+    // Active state — gold bar left
+    &.active,
+    &.current,
+    &[aria-current='page'] {
+      background-color: rgba($gold, 0.12);
+      color: $gold;
+      font-weight: $font-weight-semibold;
+
+      i {
+        color: $gold;
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: -$spacing-3;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background-color: $gold;
+        border-radius: 0 $radius-sm $radius-sm 0;
+      }
+    }
+  }
+
+  // Dropdown / sub-nav
+  .sidebar-nav-sub {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease;
+
+    &.open {
+      max-height: 300px;
+    }
+
+    a,
+    .sidebar-nav-link {
+      padding-left: $spacing-12;
+      font-size: $font-size-xs;
+
+      i {
+        font-size: 14px;
+      }
+    }
+  }
+
+  // Toggle arrow
+  .sidebar-nav-toggle {
+    i.toggle-arrow {
+      font-size: 12px;
+      transition: transform 0.3s ease;
+      width: auto;
+    }
+
+    &.open i.toggle-arrow {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .sidebar-user — User Info at Bottom
+// -----------------------------------------------------------------------------
+
+.sidebar-user {
+  flex-shrink: 0;
+  padding: $spacing-4 $spacing-5;
+  border-top: 1px solid rgba($white, 0.07);
+  background-color: rgba($charcoal-secondary, 0.5);
+
+  .sidebar-user-inner {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+  }
+
+  .sidebar-user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-full;
+    background-color: rgba($gold, 0.2);
+    color: $gold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    border: 2px solid rgba($gold, 0.3);
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .sidebar-user-info {
+    flex: 1;
+    min-width: 0;
+
+    .sidebar-user-name {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      color: $white;
+      @include truncate(1);
+    }
+
+    .sidebar-user-role {
+      font-size: $font-size-xs;
+      color: rgba($gray-light, 0.7);
+      @include truncate(1);
+    }
+  }
+
+  .sidebar-user-logout {
+    color: rgba($gray-light, 0.5);
+    font-size: 16px;
+    cursor: pointer;
+    transition: color $transition-fast;
+    flex-shrink: 0;
+
+    &:hover {
+      color: $color-danger;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .sc-main — Main Content Offset
+// -----------------------------------------------------------------------------
+
+.sc-main {
+  margin-left: $sidebar-width;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: $off-white;
+  transition: margin-left 0.3s ease;
+
+  @include tablet-down {
+    margin-left: 0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Mobile Sidebar Drawer
+// -----------------------------------------------------------------------------
+
+// Overlay behind drawer on mobile
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba($charcoal-secondary, 0.7);
+  z-index: calc(#{$z-sidebar} - 1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(2px);
+
+  @include tablet-down {
+    display: block;
+  }
+
+  &.visible {
+    opacity: 1;
+  }
+}
+
+// Mobile: sidebar hidden off-screen by default
+@include tablet-down {
+  .sc-sidebar {
+    transform: translateX(-100%);
+
+    &.open {
+      transform: translateX(0);
+      box-shadow: $shadow-xl;
+    }
+  }
+}
+
+// Prevent body scroll when sidebar open on mobile
+body.sidebar-open {
+  @include tablet-down {
+    overflow: hidden;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Sidebar Collapsed State (Desktop)
+// -----------------------------------------------------------------------------
+
+.sc-sidebar.collapsed {
+  @include desktop {
+    width: $sidebar-width-collapsed;
+
+    .sidebar-logo-text,
+    .nav-label,
+    .nav-badge,
+    .sidebar-nav-section,
+    .sidebar-user-info,
+    .sidebar-user-logout {
+      display: none;
+    }
+
+    .sidebar-logo {
+      justify-content: center;
+      padding: $spacing-6 0;
+
+      a {
+        justify-content: center;
+      }
+    }
+
+    .sidebar-nav a,
+    .sidebar-nav .sidebar-nav-link {
+      justify-content: center;
+      padding: $spacing-3;
+      margin: 0 $spacing-2;
+
+      i {
+        width: auto;
+      }
+    }
+
+    .sidebar-user-inner {
+      justify-content: center;
+    }
+
+    + .sc-main {
+      margin-left: $sidebar-width-collapsed;
+    }
+  }
+}
