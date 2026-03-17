@@ -1,13 +1,13 @@
 <?php
 // ===== Config do Banco (Hostinger) =====
 define('DB_HOST', 'localhost');                 // Host Hostinger
-define('DB_USER', 'u901713138_admin');          // Seu usuário
-define('DB_PASS', '97120Wes@');                 // Sua senha
-define('DB_NAME', 'u901713138_salacerta');      // Seu banco
+define('DB_USER', 'u400600347_salacerta');      // Usuário
+define('DB_PASS', '97120Wes@');                 // Senha
+define('DB_NAME', 'u400600347_salacerta');      // Banco
 
 // ===== App =====
 define('APP_NAME', 'Sala Certa');
-define('APP_URL', 'https://salacerta.online');
+define('APP_URL', 'https://saddlebrown-ape-456330.hostingersite.com');
 define('APP_VERSION', '1.0.0');
 
 // ===== Headers úteis =====
