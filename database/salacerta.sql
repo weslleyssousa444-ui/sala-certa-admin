@@ -17,6 +17,8 @@ ALTER DATABASE `u400600347_salacerta` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8
 -- =============================================
 -- REMOVER TABELAS EXISTENTES (ordem inversa por FK)
 -- =============================================
+DROP TABLE IF EXISTS `CONFIGURACAO_NOTIFICACAO`;
+DROP TABLE IF EXISTS `NOTIFICACAO`;
 DROP TABLE IF EXISTS `RESERVA_SALA`;
 DROP TABLE IF EXISTS `SALA`;
 DROP TABLE IF EXISTS `USUARIO`;
@@ -28,7 +30,8 @@ DROP TABLE IF EXISTS `USUARIO`;
 -- A API mobile também consulta esta tabela
 -- TIPO_USUARIO: 'admin' pode acessar o painel web
 --               'comum' acessa apenas o app mobile
--- SETOR: se preenchido, permite acesso ao painel mesmo sem ser admin
+-- USUARIO_DEPARTAMENTO: se preenchido, permite acesso ao painel mesmo sem ser admin
+-- USUARIO_CARGO: cargo/função do usuário na organização
 -- FOTO_PERFIL: caminho relativo do arquivo de foto (uploads/perfil/)
 -- =============================================
 CREATE TABLE `USUARIO` (
@@ -37,9 +40,9 @@ CREATE TABLE `USUARIO` (
     `USUARIO_EMAIL` VARCHAR(255) NOT NULL,
     `USUARIO_SENHA` VARCHAR(255) NOT NULL COMMENT 'Hash bcrypt via password_hash() ou texto puro (legado)',
     `USUARIO_CPF` VARCHAR(14) NOT NULL COMMENT 'Formato: 000.000.000-00 ou apenas números',
-    `USUARIO_CURSO` VARCHAR(255) DEFAULT NULL,
     `TIPO_USUARIO` ENUM('admin', 'comum') NOT NULL DEFAULT 'comum',
-    `SETOR` VARCHAR(255) DEFAULT '' COMMENT 'Se preenchido, permite acesso ao painel admin',
+    `USUARIO_DEPARTAMENTO` VARCHAR(100) DEFAULT NULL,
+    `USUARIO_CARGO` VARCHAR(100) DEFAULT NULL,
     `FOTO_PERFIL` VARCHAR(500) DEFAULT NULL COMMENT 'Caminho relativo: uploads/perfil/user_X_timestamp.png',
     PRIMARY KEY (`USUARIO_ID`),
     UNIQUE KEY `uk_usuario_email` (`USUARIO_EMAIL`),
@@ -89,14 +92,19 @@ CREATE TABLE `RESERVA_SALA` (
     `HORA_INICIO` TIME NOT NULL COMMENT 'Horário de início (HH:MM:SS)',
     `TEMPO_RESERVA` TIME NOT NULL COMMENT 'Duração da reserva (ex: 01:30:00)',
     `ESTADO` ENUM('Ativa', 'Cancelada', 'Pendente', 'Reservado') NOT NULL DEFAULT 'Ativa',
+    `RECORRENCIA` ENUM('semanal', 'quinzenal', 'mensal') DEFAULT NULL,
+    `RECORRENCIA_FIM` DATE DEFAULT NULL,
+    `RESERVA_PAI_ID` INT DEFAULT NULL,
     PRIMARY KEY (`RESERVA_ID`),
     KEY `idx_reserva_usuario` (`USUARIO_ID`),
     KEY `idx_reserva_sala` (`SALA_ID`),
     KEY `idx_reserva_data` (`DATA_RESERVA`),
     KEY `idx_reserva_estado` (`ESTADO`),
     KEY `idx_reserva_sala_data_estado` (`SALA_ID`, `DATA_RESERVA`, `ESTADO`) COMMENT 'Índice composto para verificação de conflitos',
+    KEY `idx_reserva_pai` (`RESERVA_PAI_ID`),
     CONSTRAINT `fk_reserva_usuario` FOREIGN KEY (`USUARIO_ID`) REFERENCES `USUARIO` (`USUARIO_ID`) ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT `fk_reserva_sala` FOREIGN KEY (`SALA_ID`) REFERENCES `SALA` (`SALA_ID`) ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT `fk_reserva_sala` FOREIGN KEY (`SALA_ID`) REFERENCES `SALA` (`SALA_ID`) ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT `fk_reserva_pai` FOREIGN KEY (`RESERVA_PAI_ID`) REFERENCES `RESERVA_SALA` (`RESERVA_ID`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =============================================
@@ -112,41 +120,41 @@ CREATE TABLE `RESERVA_SALA` (
 
 -- ===== ADMIN PRINCIPAL =====
 -- Email: salacerta@salacerta.com | Senha: admin123
--- Acesso: Painel Web Admin (TIPO_USUARIO = admin, SETOR = TI)
-INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `USUARIO_CURSO`, `TIPO_USUARIO`, `SETOR`, `FOTO_PERFIL`) VALUES
-(1, 'Administrador Sala Certa', 'salacerta@salacerta.com', 'admin123', '000.000.000-00', 'Administração de Sistemas', 'admin', 'TI', NULL);
+-- Acesso: Painel Web Admin (TIPO_USUARIO = admin, USUARIO_DEPARTAMENTO = TI)
+INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `TIPO_USUARIO`, `USUARIO_DEPARTAMENTO`, `USUARIO_CARGO`, `FOTO_PERFIL`) VALUES
+(1, 'Administrador Sala Certa', 'salacerta@salacerta.com', 'admin123', '000.000.000-00', 'admin', 'TI', 'Analista', NULL);
 
--- ===== COORDENADOR (acessa painel pelo SETOR) =====
+-- ===== COORDENADOR (acessa painel pelo USUARIO_DEPARTAMENTO) =====
 -- Email: coordenador@senac.com | Senha: coord123
--- Acesso: Painel Web Admin (TIPO_USUARIO = comum, mas SETOR preenchido)
-INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `USUARIO_CURSO`, `TIPO_USUARIO`, `SETOR`, `FOTO_PERFIL`) VALUES
-(2, 'Ana Paula Coordenadora', 'coordenador@senac.com', 'coord123', '111.222.333-44', 'Coordenação Acadêmica', 'comum', 'Acadêmico', NULL);
+-- Acesso: Painel Web Admin (TIPO_USUARIO = comum, mas USUARIO_DEPARTAMENTO preenchido)
+INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `TIPO_USUARIO`, `USUARIO_DEPARTAMENTO`, `USUARIO_CARGO`, `FOTO_PERFIL`) VALUES
+(2, 'Ana Paula Coordenadora', 'coordenador@senac.com', 'coord123', '111.222.333-44', 'comum', 'Acadêmico', 'Coordenador', NULL);
 
--- ===== PROFESSORES (usuários comuns com reservas) =====
+-- ===== FUNCIONÁRIOS (usuários comuns com reservas) =====
 -- Email: professor@senac.com | Senha: prof123
-INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `USUARIO_CURSO`, `TIPO_USUARIO`, `SETOR`, `FOTO_PERFIL`) VALUES
-(3, 'Carlos Eduardo Silva', 'professor@senac.com', 'prof123', '222.333.444-55', 'Sistemas de Informação', 'comum', '', NULL);
+INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `TIPO_USUARIO`, `USUARIO_DEPARTAMENTO`, `USUARIO_CARGO`, `FOTO_PERFIL`) VALUES
+(3, 'Carlos Eduardo Silva', 'professor@senac.com', 'prof123', '222.333.444-55', 'comum', NULL, 'Analista', NULL);
 
 -- Email: maria@senac.com | Senha: maria123
-INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `USUARIO_CURSO`, `TIPO_USUARIO`, `SETOR`, `FOTO_PERFIL`) VALUES
-(4, 'Maria Fernanda Oliveira', 'maria@senac.com', 'maria123', '333.444.555-66', 'Engenharia de Software', 'comum', '', NULL);
+INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `TIPO_USUARIO`, `USUARIO_DEPARTAMENTO`, `USUARIO_CARGO`, `FOTO_PERFIL`) VALUES
+(4, 'Maria Fernanda Oliveira', 'maria@senac.com', 'maria123', '333.444.555-66', 'comum', NULL, 'Gerente', NULL);
 
--- ===== ALUNOS (usuários comuns - app mobile) =====
+-- ===== USUÁRIOS COMUNS =====
 -- Email: joao@aluno.senac.com | Senha: joao123
-INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `USUARIO_CURSO`, `TIPO_USUARIO`, `SETOR`, `FOTO_PERFIL`) VALUES
-(5, 'João Pedro Santos', 'joao@aluno.senac.com', 'joao123', '444.555.666-77', 'Sistemas de Informação', 'comum', '', NULL);
+INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `TIPO_USUARIO`, `USUARIO_DEPARTAMENTO`, `USUARIO_CARGO`, `FOTO_PERFIL`) VALUES
+(5, 'João Pedro Santos', 'joao@aluno.senac.com', 'joao123', '444.555.666-77', 'comum', NULL, 'Funcionario', NULL);
 
 -- Email: lucas@aluno.senac.com | Senha: lucas123
-INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `USUARIO_CURSO`, `TIPO_USUARIO`, `SETOR`, `FOTO_PERFIL`) VALUES
-(6, 'Lucas Mendes Pereira', 'lucas@aluno.senac.com', 'lucas123', '555.666.777-88', 'Análise e Desenvolvimento de Sistemas', 'comum', '', NULL);
+INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `TIPO_USUARIO`, `USUARIO_DEPARTAMENTO`, `USUARIO_CARGO`, `FOTO_PERFIL`) VALUES
+(6, 'Lucas Mendes Pereira', 'lucas@aluno.senac.com', 'lucas123', '555.666.777-88', 'comum', NULL, 'Funcionario', NULL);
 
 -- Email: juliana@aluno.senac.com | Senha: juliana123
-INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `USUARIO_CURSO`, `TIPO_USUARIO`, `SETOR`, `FOTO_PERFIL`) VALUES
-(7, 'Juliana Costa Ribeiro', 'juliana@aluno.senac.com', 'juliana123', '666.777.888-99', 'Design Gráfico', 'comum', '', NULL);
+INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `TIPO_USUARIO`, `USUARIO_DEPARTAMENTO`, `USUARIO_CARGO`, `FOTO_PERFIL`) VALUES
+(7, 'Juliana Costa Ribeiro', 'juliana@aluno.senac.com', 'juliana123', '666.777.888-99', 'comum', NULL, 'Funcionario', NULL);
 
 -- Email: rafael@aluno.senac.com | Senha: rafael123
-INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `USUARIO_CURSO`, `TIPO_USUARIO`, `SETOR`, `FOTO_PERFIL`) VALUES
-(8, 'Rafael Almeida Souza', 'rafael@aluno.senac.com', 'rafael123', '777.888.999-00', 'Redes de Computadores', 'comum', '', NULL);
+INSERT INTO `USUARIO` (`USUARIO_ID`, `USUARIO_NOME`, `USUARIO_EMAIL`, `USUARIO_SENHA`, `USUARIO_CPF`, `TIPO_USUARIO`, `USUARIO_DEPARTAMENTO`, `USUARIO_CARGO`, `FOTO_PERFIL`) VALUES
+(8, 'Rafael Almeida Souza', 'rafael@aluno.senac.com', 'rafael123', '777.888.999-00', 'comum', NULL, 'Funcionario', NULL);
 
 -- =============================================
 -- DADOS: SALAS
@@ -270,6 +278,36 @@ INSERT INTO `RESERVA_SALA` (`USUARIO_ID`, `SALA_ID`, `DATA_RESERVA`, `HORA_INICI
 (2, 4,  '2026-01-22', '10:00:00', '02:00:00', 'Ativa'),
 (1, 10, '2026-01-23', '09:00:00', '01:00:00', 'Ativa');
 
+-- =============================================
+-- TABELA: NOTIFICACAO
+-- Armazena notificações geradas para os usuários
+-- =============================================
+CREATE TABLE IF NOT EXISTS `NOTIFICACAO` (
+    `NOTIFICACAO_ID` INT AUTO_INCREMENT PRIMARY KEY,
+    `USUARIO_ID` INT NOT NULL,
+    `TIPO` ENUM('confirmacao', 'lembrete', 'cancelamento', 'conflito') NOT NULL,
+    `MENSAGEM` TEXT NOT NULL,
+    `LIDA` TINYINT(1) DEFAULT 0,
+    `CRIADO_EM` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `RESERVA_ID` INT DEFAULT NULL,
+    KEY `idx_notif_usuario_lida` (`USUARIO_ID`, `LIDA`, `CRIADO_EM`),
+    CONSTRAINT `fk_notif_usuario` FOREIGN KEY (`USUARIO_ID`) REFERENCES `USUARIO` (`USUARIO_ID`) ON DELETE CASCADE,
+    CONSTRAINT `fk_notif_reserva` FOREIGN KEY (`RESERVA_ID`) REFERENCES `RESERVA_SALA` (`RESERVA_ID`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- =============================================
+-- TABELA: CONFIGURACAO_NOTIFICACAO
+-- Preferências de notificação por usuário
+-- =============================================
+CREATE TABLE IF NOT EXISTS `CONFIGURACAO_NOTIFICACAO` (
+    `CONFIG_ID` INT AUTO_INCREMENT PRIMARY KEY,
+    `USUARIO_ID` INT NOT NULL UNIQUE,
+    `NOTIF_CONFIRMACAO` TINYINT(1) DEFAULT 1,
+    `NOTIF_LEMBRETE` TINYINT(1) DEFAULT 1,
+    `NOTIF_CANCELAMENTO` TINYINT(1) DEFAULT 1,
+    CONSTRAINT `fk_config_usuario` FOREIGN KEY (`USUARIO_ID`) REFERENCES `USUARIO` (`USUARIO_ID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 COMMIT;
 
 -- =============================================
@@ -279,26 +317,28 @@ COMMIT;
 -- ADMIN (acessa painel web):
 --   Email: salacerta@salacerta.com
 --   Senha: admin123
---   Tipo: admin | Setor: TI
+--   Tipo: admin | Departamento: TI | Cargo: Analista
 --
--- COORDENADORA (acessa painel web pelo setor):
+-- COORDENADORA (acessa painel web pelo departamento):
 --   Email: coordenador@senac.com
 --   Senha: coord123
---   Tipo: comum | Setor: Acadêmico
+--   Tipo: comum | Departamento: Acadêmico | Cargo: Coordenador
 --
--- PROFESSOR 1 (app mobile + reservas via painel):
+-- FUNCIONÁRIO 1 (app mobile + reservas via painel):
 --   Email: professor@senac.com
 --   Senha: prof123
+--   Cargo: Analista
 --
--- PROFESSORA 2 (app mobile + reservas via painel):
+-- FUNCIONÁRIA 2 (app mobile + reservas via painel):
 --   Email: maria@senac.com
 --   Senha: maria123
+--   Cargo: Gerente
 --
--- ALUNOS (apenas app mobile):
---   joao@aluno.senac.com / joao123
---   lucas@aluno.senac.com / lucas123
---   juliana@aluno.senac.com / juliana123
---   rafael@aluno.senac.com / rafael123
+-- USUÁRIOS COMUNS:
+--   joao@aluno.senac.com / joao123       | Cargo: Funcionario
+--   lucas@aluno.senac.com / lucas123     | Cargo: Funcionario
+--   juliana@aluno.senac.com / juliana123 | Cargo: Funcionario
+--   rafael@aluno.senac.com / rafael123   | Cargo: Funcionario
 --
 -- TOTAL: 8 usuários, 15 salas (3 andares), 48 reservas
 -- =============================================
